@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Area {
+  id          Int      @id @default(autoincrement())
+  areaCode    String   @unique
+  name        String
+  description String?
+
+  plants      Plant[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Plant {
+  id              Int      @id @default(autoincrement())
+  plantCode       String   @unique
+
+  areaId          Int?
+  area            Area?    @relation(fields: [areaId], references: [id])
+
+  category        String?
+  nickname        String
+  commonName      String?
+  scientificName  String?
+
+  identifyStatus  IdentifyStatus @default(Unknown)
+  memo            String?
+
+  notes           PlantNote[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PlantNote {
+  id          Int      @id @default(autoincrement())
+
+  plantId     Int
+  plant       Plant    @relation(fields: [plantId], references: [id])
+
+  noteDate    DateTime @default(now())
+  noteType    String?
+  content     String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum IdentifyStatus {
+  Unknown
+  Tentative
+  Confirmed
+}
