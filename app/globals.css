@@ -13,7 +13,95 @@
     --foreground: #ededed;
   }
 }
+body {
+  background: #f4f7f2;
+  color: #1f2933;
+  font-family: Arial, sans-serif;
+}
 
+main {
+  margin: 0 auto;
+}
+
+h1 {
+  color: #2f5d3a;
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+
+h2 {
+  color: #3f6f45;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+section {
+  background: white;
+  border: 1px solid #d9e2d3;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+label {
+  font-weight: 600;
+}
+
+input,
+select {
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px 10px;
+  border: 1px solid #b8c7b0;
+  border-radius: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 160px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #3f7d4a;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2f6238;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 12px;
+}
+
+th {
+  background: #e5f0df;
+  color: #2f5d3a;
+  text-align: left;
+}
+
+th,
+td {
+  border: 1px solid #d6dfd0;
+  padding: 10px;
+}
+
+tr:nth-child(even) {
+  background: #f8faf6;
+}
 body {
   color: var(--foreground);
   background: var(--background);

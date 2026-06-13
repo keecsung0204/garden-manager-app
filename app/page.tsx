@@ -1,101 +1,198 @@
-import Image from "next/image";
+import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
-export default function Home() {
+async function getNextPlantCode() {
+  const lastPlant = await prisma.plant.findFirst({
+    orderBy: {
+      id: "desc",
+    },
+  });
+
+  if (!lastPlant) {
+    return "P001";
+  }
+
+  const lastNumber = Number(lastPlant.plantCode.replace("P", ""));
+  const nextNumber = Number.isNaN(lastNumber) ? lastPlant.id + 1 : lastNumber + 1;
+
+  return `P${String(nextNumber).padStart(3, "0")}`;
+}
+
+export default async function Home() {
+  const areas = await prisma.area.findMany({
+    orderBy: {
+      areaCode: "asc",
+    },
+  });
+
+  const categories = await prisma.plantCategory.findMany({
+    orderBy: {
+      categoryCode: "asc",
+    },
+  });
+
+  const plants = await prisma.plant.findMany({
+    orderBy: {
+      plantCode: "asc",
+    },
+    include: {
+      area: true,
+      category: true,
+    },
+  });
+
+  const nextPlantCode = await getNextPlantCode();
+
+  async function createPlant(formData: FormData) {
+    "use server";
+
+    const plantCode = formData.get("plantCode")?.toString().trim();
+    const plantName = formData.get("plantName")?.toString().trim();
+    const areaId = formData.get("areaId")?.toString();
+    const categoryId = formData.get("categoryId")?.toString();
+    const identifyStatus = formData.get("identifyStatus")?.toString();
+    const plantStatus = formData.get("plantStatus")?.toString();
+    const scientificName = formData.get("scientificName")?.toString().trim();
+
+    if (!plantCode || !plantName) {
+      return;
+    }
+
+    await prisma.plant.create({
+      data: {
+        plantCode,
+        plantName,
+        areaId: areaId ? Number(areaId) : null,
+        categoryId: categoryId ? Number(categoryId) : null,
+        identifyStatus: identifyStatus || "Unknown",
+        plantStatus: plantStatus || "Active",
+        scientificName: scientificName || null,
+      },
+    });
+
+    revalidatePath("/");
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main style={{ padding: "20px", maxWidth: "900px" }}>
+      <h1>Garden Manager</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <section style={{ marginBottom: "40px" }}>
+        <h2>Add Plant</h2>
+
+        <form action={createPlant}>
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Plant Code:
+              <br />
+              <input name="plantCode" defaultValue={nextPlantCode} />
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Plant Name:
+              <br />
+              <input name="plantName" required />
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Area:
+              <br />
+              <select name="areaId" required defaultValue="">
+                <option value="">장소 선택</option>
+                {areas.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.areaCode} - {area.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Category:
+              <br />
+              <select name="categoryId" required defaultValue="">
+                <option value="">분류 선택</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.categoryCode} - {category.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Identify Status:
+              <br />
+              <select name="identifyStatus" defaultValue="Unknown">
+                <option value="Unknown">Unknown</option>
+                <option value="Tentative">Tentative</option>
+                <option value="Confirmed">Confirmed</option>
+              </select>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Plant Status:
+              <br />
+              <select name="plantStatus" defaultValue="Active">
+                <option value="Active">Active</option>
+                <option value="Dormant">Dormant</option>
+                <option value="Dead">Dead</option>
+                <option value="Removed">Removed</option>
+                <option value="Harvested">Harvested</option>
+              </select>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Scientific Name:
+              <br />
+              <input name="scientificName" />
+            </label>
+          </div>
+
+          <button type="submit">Save Plant</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Plants</h2>
+
+        <table border={1} cellPadding={8}>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Plant Name</th>
+              <th>Area</th>
+              <th>Category</th>
+              <th>Identify</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {plants.map((plant) => (
+              <tr key={plant.id}>
+                <td>{plant.plantCode}</td>
+                <td>{plant.plantName}</td>
+                <td>{plant.area?.name}</td>
+                <td>{plant.category?.name}</td>
+                <td>{plant.identifyStatus}</td>
+                <td>{plant.plantStatus}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    </main>
   );
 }
