@@ -113,3 +113,57 @@ body {
     text-wrap: balance;
   }
 }
+.plant-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.plant-table th {
+  background: #e5f0df;
+  color: #2f5d3a;
+  text-align: left;
+}
+
+.plant-table th,
+.plant-table td {
+  border: 1px solid #d6dfd0;
+  padding: 10px;
+}
+
+.plant-table tr:nth-child(even) {
+  background: #f8faf6;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.status-active {
+  background: #dff3e4;
+  color: #256337;
+}
+
+.status-dormant {
+  background: #f3ead7;
+  color: #7a5a18;
+}
+
+.status-dead,
+.status-removed {
+  background: #ececec;
+  color: #555;
+}
+
+.status-harvested {
+  background: #fff1cc;
+  color: #7a5600;
+}

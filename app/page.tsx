@@ -173,7 +173,7 @@ export default async function Home() {
         </form>
       </section>
 
-      <section>
+      {/* <section>
         <h2>Plants</h2>
 
         <table border={1} cellPadding={8}>
@@ -200,7 +200,58 @@ export default async function Home() {
             ))}
           </tbody>
         </table>
+      </section> */}
+      <section>
+        <h2>Plants ({plants.length})</h2>
+
+        {plants.length === 0 ? (
+          <p>등록된 Plant가 없습니다.</p>
+        ) : (
+          <table className="plant-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Plant Name</th>
+                <th>Area</th>
+                <th>Category</th>
+                <th>Identify</th>
+                <th>Status</th>
+                <th>Scientific Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {plants.map((plant) => (
+                <tr key={plant.id}>
+                  <td>{plant.plantCode}</td>
+                  <td>{plant.plantName}</td>
+                  <td>
+                    {plant.area
+                      ? `${plant.area.areaCode} - ${plant.area.name}`
+                      : "-"}
+                  </td>
+                  <td>
+                    {plant.category
+                      ? `${plant.category.categoryCode} - ${plant.category.name}`
+                      : "-"}
+                  </td>
+                  <td>{plant.identifyStatus}</td>
+                  <td>
+                    <span
+                      className={`status-pill status-${
+                        plant.status?.name?.toLowerCase() || "none"
+                      }`}
+                    >
+                      {plant.status?.name || "-"}
+                    </span>
+                  </td>
+                  <td>{plant.scientificName || "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </section>
+
     </main>
   );
 }
