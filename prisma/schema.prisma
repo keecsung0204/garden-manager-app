@@ -42,7 +42,8 @@ model Plant {
   plantName       String
   scientificName  String?
   identifyStatus  IdentifyStatus @default(Unknown)
-  plantStatus     PlantStatus @default(Active)
+  statusId        Int?
+  status          PlantStatus? @relation(fields: [statusId], references: [id])
 
   notes           PlantNote[]
 
@@ -64,16 +65,21 @@ model PlantNote {
   updatedAt DateTime @updatedAt
 }
 
+model PlantStatus {
+  id           Int      @id @default(autoincrement())
+  statusCode   String   @unique
+  name         String
+  description  String?
+  displayOrder Int      @default(0)
+
+  plants       Plant[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 enum IdentifyStatus {
   Unknown
   Tentative
   Confirmed
-}
-
-enum PlantStatus {
-  Active
-  Dormant
-  Dead
-  Removed
-  Harvested
 }

@@ -31,6 +31,12 @@ export default async function Home() {
     },
   });
 
+  const statuses = await prisma.plantStatus.findMany({
+    orderBy: {
+      displayOrder: "asc",
+    },
+  });
+
   const plants = await prisma.plant.findMany({
     orderBy: {
       plantCode: "asc",
@@ -38,6 +44,7 @@ export default async function Home() {
     include: {
       area: true,
       category: true,
+      status: true,
     },
   });
 
@@ -51,7 +58,7 @@ export default async function Home() {
     const areaId = formData.get("areaId")?.toString();
     const categoryId = formData.get("categoryId")?.toString();
     const identifyStatus = formData.get("identifyStatus")?.toString();
-    const plantStatus = formData.get("plantStatus")?.toString();
+    const statusId = formData.get("statusId")?.toString();
     const scientificName = formData.get("scientificName")?.toString().trim();
 
     if (!plantCode || !plantName) {
@@ -64,8 +71,8 @@ export default async function Home() {
         plantName,
         areaId: areaId ? Number(areaId) : null,
         categoryId: categoryId ? Number(categoryId) : null,
-        identifyStatus: identifyStatus || "Unknown",
-        plantStatus: plantStatus || "Active",
+        identifyStatus: (identifyStatus || "Unknown") as "Unknown" | "Tentative" | "Confirmed",
+        statusId: statusId ? Number(statusId) : null,
         scientificName: scientificName || null,
       },
     });
@@ -143,12 +150,13 @@ export default async function Home() {
             <label>
               Plant Status:
               <br />
-              <select name="plantStatus" defaultValue="Active">
-                <option value="Active">Active</option>
-                <option value="Dormant">Dormant</option>
-                <option value="Dead">Dead</option>
-                <option value="Removed">Removed</option>
-                <option value="Harvested">Harvested</option>
+              <select name="statusId" required defaultValue="">
+                <option value="">상태 선택</option>
+                {statuses.map((status) => (
+                  <option key={status.id} value={status.id}>
+                    {status.statusCode} - {status.name}
+                  </option>
+                ))}
               </select>
             </label>
           </div>
@@ -187,7 +195,7 @@ export default async function Home() {
                 <td>{plant.area?.name}</td>
                 <td>{plant.category?.name}</td>
                 <td>{plant.identifyStatus}</td>
-                <td>{plant.plantStatus}</td>
+                <td>{plant.status?.name || "-"}</td>
               </tr>
             ))}
           </tbody>
