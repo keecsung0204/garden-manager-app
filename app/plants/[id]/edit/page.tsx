@@ -8,6 +8,12 @@ export default async function EditPlantPage({
 }) {
   const plantId = Number(params.id);
 
+  const areas = await prisma.area.findMany({
+    orderBy: {
+      areaCode: "asc",
+    },
+  });
+
   const plant = await prisma.plant.findUnique({
     where: {
       id: plantId,
@@ -51,10 +57,23 @@ export default async function EditPlantPage({
         </div>
 
         <div className="detail-row">
-          <span className="detail-label">Area</span>
-          <span>
-            {plant.area ? `${plant.area.areaCode} - ${plant.area.name}` : "-"}
-          </span>
+          <label className="detail-label" htmlFor="areaId">
+            Area
+          </label>
+
+          <select
+            id="areaId"
+            name="areaId"
+            defaultValue={plant.areaId || ""}
+          >
+            <option value="">장소 선택</option>
+
+            {areas.map((area) => (
+              <option key={area.id} value={area.id}>
+                {area.areaCode} - {area.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="detail-row">
