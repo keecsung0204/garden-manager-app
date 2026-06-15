@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
 async function getNextPlantCode() {
   const lastPlant = await prisma.plant.findFirst({
@@ -217,6 +218,7 @@ export default async function Home() {
                 <th>Identify</th>
                 <th>Status</th>
                 <th>Scientific Name</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -245,6 +247,9 @@ export default async function Home() {
                     </span>
                   </td>
                   <td>{plant.scientificName || "-"}</td>
+                  <td>
+                    <Link href={`/plants/${plant.id}/edit`}>Edit</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>
