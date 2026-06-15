@@ -31,25 +31,32 @@ export default async function EditPlantPage({
   return (
     <main className="edit-page">
       <h1>Edit Plant</h1>
-  
+
       <section className="detail-card">
         <div className="detail-row">
           <span className="detail-label">Code</span>
           <span>{plant.plantCode}</span>
         </div>
-  
+
         <div className="detail-row">
-          <span className="detail-label">Plant Name</span>
-          <span>{plant.plantName}</span>
+          <label className="detail-label" htmlFor="plantName">
+            Plant Name
+          </label>
+          <input
+            id="plantName"
+            name="plantName"
+            defaultValue={plant.plantName}
+            required
+          />
         </div>
-  
+
         <div className="detail-row">
           <span className="detail-label">Area</span>
           <span>
             {plant.area ? `${plant.area.areaCode} - ${plant.area.name}` : "-"}
           </span>
         </div>
-  
+
         <div className="detail-row">
           <span className="detail-label">Category</span>
           <span>
@@ -58,18 +65,18 @@ export default async function EditPlantPage({
               : "-"}
           </span>
         </div>
-  
+
         <div className="detail-row">
           <span className="detail-label">Status</span>
           <span>{plant.status?.name || "-"}</span>
         </div>
-  
+
         <div className="detail-row">
           <span className="detail-label">Identify Status</span>
           <span>{plant.identifyStatus}</span>
         </div>
       </section>
-  
+
       <Link className="back-link" href="/">
         ← Back to Home
       </Link>
