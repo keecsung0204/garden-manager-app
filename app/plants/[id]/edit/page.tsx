@@ -50,7 +50,7 @@ export default async function EditPlantPage({
     <main className="edit-page">
       <h1>Edit Plant</h1>
 
-      <section className="detail-card">
+      <form className="detail-card">
         <div className="detail-row">
           <span className="detail-label">Code</span>
           <span>{plant.plantCode}</span>
@@ -139,8 +139,10 @@ export default async function EditPlantPage({
             defaultValue={plant.scientificName || ""}
           />
         </div>
-
-      </section>
+        <div className="form-actions">
+          <button type="submit">Save Changes</button>
+        </div>
+      </form>
 
       <Link className="back-link" href="/">
         ← Back to Home
