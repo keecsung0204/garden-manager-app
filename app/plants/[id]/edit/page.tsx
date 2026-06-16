@@ -36,6 +36,11 @@ export default async function EditPlantPage({
       area: true,
       category: true,
       status: true,
+      notes: {
+        orderBy: {
+          noteDate: "desc",
+        },
+      },
     },
   });
 
@@ -177,7 +182,23 @@ export default async function EditPlantPage({
           <button type="submit">Save Changes</button>
         </div>
       </form>
+      <section className="detail-card">
+        <h2>Notes</h2>
 
+        {plant.notes.length === 0 ? (
+          <p>아직 기록이 없습니다.</p>
+        ) : (
+          <ul>
+            {plant.notes.map((note) => (
+              <li key={note.id}>
+                <strong>{note.noteType || "Note"}</strong> -{" "}
+                {note.noteDate.toLocaleDateString()} <br />
+                {note.content}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
       <Link className="back-link" href="/">
         ← Back to Home
       </Link>
