@@ -210,3 +210,39 @@ body {
 .back-link:hover {
   text-decoration: underline;
 }
+.note-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.note-card {
+  background: #f8faf6;
+  border: 1px solid #d9e2d3;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.note-type {
+  font-weight: 700;
+  color: #2f5d3a;
+}
+
+.note-date {
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.note-content {
+  margin: 0;
+  line-height: 1.5;
+}

@@ -244,15 +244,20 @@ export default async function EditPlantPage({
         {plant.notes.length === 0 ? (
           <p>아직 기록이 없습니다.</p>
         ) : (
-          <ul>
+          <div className="note-list">
             {plant.notes.map((note) => (
-              <li key={note.id}>
-                <strong>{note.noteType || "Note"}</strong> -{" "}
-                {note.noteDate.toLocaleString()} <br />
-                {note.content}
-              </li>
+              <div className="note-card" key={note.id}>
+                <div className="note-header">
+                  <span className="note-type">{note.noteType || "Note"}</span>
+                  <span className="note-date">
+                    {note.noteDate.toLocaleString()}
+                  </span>
+                </div>
+
+                <p className="note-content">{note.content}</p>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </section>
       <Link className="back-link" href="/">
