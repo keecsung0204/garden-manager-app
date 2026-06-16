@@ -182,6 +182,44 @@ export default async function EditPlantPage({
           <button type="submit">Save Changes</button>
         </div>
       </form>
+
+      <form className="detail-card">
+        <h2>Add Note</h2>
+
+        <div className="detail-row">
+          <label className="detail-label" htmlFor="noteType">
+            Note Type
+          </label>
+
+          <select id="noteType" name="noteType" defaultValue="Observation">
+            <option value="Observation">Observation</option>
+            <option value="Watering">Watering</option>
+            <option value="Fertilizer">Fertilizer</option>
+            <option value="Pruning">Pruning</option>
+            <option value="Pest">Pest</option>
+            <option value="Disease">Disease</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div className="detail-row">
+          <label className="detail-label" htmlFor="content">
+            Content
+          </label>
+
+          <textarea
+            id="content"
+            name="content"
+            rows={4}
+            required
+          />
+        </div>
+
+        <div className="form-actions">
+          <button type="submit">Save Note</button>
+        </div>
+      </form>
+
       <section className="detail-card">
         <h2>Notes</h2>
 
