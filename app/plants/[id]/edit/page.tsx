@@ -85,6 +85,24 @@ export default async function EditPlantPage({
     redirect("/");
   }
 
+  async function createNote(formData: FormData) {
+    "use server";
+
+    const noteType = formData.get("noteType") as string;
+    const content = formData.get("content") as string;
+
+    await prisma.plantNote.create({
+      data: {
+        plantId: plant.id,
+        noteType,
+        content,
+      },
+    });
+
+    revalidatePath(`/plants/${plant.id}/edit`);
+    redirect(`/plants/${plant.id}/edit`);
+  }
+
   return (
     <main className="edit-page">
       <h1>Edit Plant</h1>
@@ -183,7 +201,7 @@ export default async function EditPlantPage({
         </div>
       </form>
 
-      <form className="detail-card">
+      <form className="detail-card" action={createNote}>
         <h2>Add Note</h2>
 
         <div className="detail-row">
@@ -230,7 +248,7 @@ export default async function EditPlantPage({
             {plant.notes.map((note) => (
               <li key={note.id}>
                 <strong>{note.noteType || "Note"}</strong> -{" "}
-                {note.noteDate.toLocaleDateString()} <br />
+                {note.noteDate.toLocaleString()} <br />
                 {note.content}
               </li>
             ))}
