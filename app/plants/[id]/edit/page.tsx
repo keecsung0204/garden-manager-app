@@ -210,14 +210,19 @@ export default async function EditPlantPage({
           </label>
 
           <select id="noteType" name="noteType" defaultValue="Observation">
-            <option value="Observation">Observation</option>
-            <option value="Watering">Watering</option>
-            <option value="Fertilizer">Fertilizer</option>
-            <option value="Pruning">Pruning</option>
-            <option value="Pest">Pest</option>
-            <option value="Disease">Disease</option>
-            <option value="Other">Other</option>
+            <option value="Observation">Observation - 관찰</option>
+            <option value="Problem">Problem - 문제 발견</option>
+            <option value="AI Advice">AI Advice - AI 조언</option>
+            <option value="Action">Action - 실제 조치</option>
+            <option value="Follow-up">Follow-up - 결과 확인</option>
+            <option value="Watering">Watering - 물주기</option>
+            <option value="Fertilizer">Fertilizer - 비료</option>
+            <option value="Pruning">Pruning - 가지치기</option>
+            <option value="Pest">Pest - 해충</option>
+            <option value="Disease">Disease - 병</option>
+            <option value="Other">Other - 기타</option>
           </select>
+
         </div>
 
         <div className="detail-row">
