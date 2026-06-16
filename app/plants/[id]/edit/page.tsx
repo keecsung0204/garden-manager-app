@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export default async function EditPlantPage({
   params,
@@ -45,12 +47,44 @@ export default async function EditPlantPage({
       </main>
     );
   }
+  async function updatePlant(formData: FormData) {
+    "use server";
+
+    const plantName = formData.get("plantName") as string;
+    const areaId = formData.get("areaId") as string;
+    const categoryId = formData.get("categoryId") as string;
+    const statusId = formData.get("statusId") as string;
+    const identifyStatus = formData.get("identifyStatus") as
+      | "Unknown"
+      | "Tentative"
+      | "Confirmed";
+    const scientificName = formData.get("scientificName") as string;
+
+    await prisma.plant.update({
+      where: {
+        id: plant.id,
+      },
+      data: {
+        plantName,
+        areaId: areaId ? Number(areaId) : null,
+        categoryId: categoryId ? Number(categoryId) : null,
+        statusId: statusId ? Number(statusId) : null,
+        identifyStatus,
+        scientificName: scientificName || null,
+      },
+    });
+
+    revalidatePath("/");
+    revalidatePath(`/plants/${plant.id}/edit`);
+
+    redirect("/");
+  }
 
   return (
     <main className="edit-page">
       <h1>Edit Plant</h1>
 
-      <form className="detail-card">
+      <form className="detail-card" action={updatePlant}>
         <div className="detail-row">
           <span className="detail-label">Code</span>
           <span>{plant.plantCode}</span>
