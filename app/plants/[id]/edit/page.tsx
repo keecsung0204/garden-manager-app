@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import SubmitButton from "@/app/components/SubmitButton";
 
 export default async function EditPlantPage({
   params,
@@ -201,7 +202,11 @@ export default async function EditPlantPage({
         </div>
       </form>
 
-      <form className="detail-card" action={createNote}>
+      <form
+        key={plant.notes.length}
+        className="detail-card"
+        action={createNote}
+      >
         <h2>Add Note</h2>
 
         <div className="detail-row">
@@ -239,7 +244,7 @@ export default async function EditPlantPage({
         </div>
 
         <div className="form-actions">
-          <button type="submit">Save Note</button>
+          <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
         </div>
       </form>
 
