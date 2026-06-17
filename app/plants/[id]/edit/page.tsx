@@ -29,6 +29,15 @@ export default async function EditPlantPage({
     },
   });
 
+  const noteTypes = await prisma.noteType.findMany({
+    where: {
+      isActive: true,
+    },
+    orderBy: {
+      displayOrder: "asc",
+    },
+  });
+
   const plant = await prisma.plant.findUnique({
     where: {
       id: plantId,
@@ -40,6 +49,9 @@ export default async function EditPlantPage({
       notes: {
         orderBy: {
           noteDate: "desc",
+        },
+        include: {
+          noteTypeRef: true,
         },
       },
     },
@@ -89,13 +101,13 @@ export default async function EditPlantPage({
   async function createNote(formData: FormData) {
     "use server";
 
-    const noteType = formData.get("noteType") as string;
+    const noteTypeId = formData.get("noteTypeId") as string;
     const content = formData.get("content") as string;
 
     await prisma.plantNote.create({
       data: {
         plantId: plant.id,
-        noteType,
+        noteTypeId: noteTypeId ? Number(noteTypeId) : null,
         content,
       },
     });
@@ -214,18 +226,14 @@ export default async function EditPlantPage({
             Note Type
           </label>
 
-          <select id="noteType" name="noteType" defaultValue="Observation">
-            <option value="Observation">Observation - 관찰</option>
-            <option value="Problem">Problem - 문제 발견</option>
-            <option value="AI Advice">AI Advice - AI 조언</option>
-            <option value="Action">Action - 실제 조치</option>
-            <option value="Follow-up">Follow-up - 결과 확인</option>
-            <option value="Watering">Watering - 물주기</option>
-            <option value="Fertilizer">Fertilizer - 비료</option>
-            <option value="Pruning">Pruning - 가지치기</option>
-            <option value="Pest">Pest - 해충</option>
-            <option value="Disease">Disease - 병</option>
-            <option value="Other">Other - 기타</option>
+          <select id="noteTypeId" name="noteTypeId" defaultValue="">
+            <option value="">Note Type 선택</option>
+
+            {noteTypes.map((noteType) => (
+              <option key={noteType.id} value={noteType.id}>
+                {noteType.name} - {noteType.description}
+              </option>
+            ))}
           </select>
 
         </div>
@@ -258,7 +266,9 @@ export default async function EditPlantPage({
             {plant.notes.map((note) => (
               <div className="note-card" key={note.id}>
                 <div className="note-header">
-                  <span className="note-type">{note.noteType || "Note"}</span>
+                  <span className="note-type">
+                    {note.noteTypeRef?.name || note.noteType || "Note"}
+                  </span>
                   <span className="note-date">
                     {note.noteDate.toLocaleString()}
                   </span>
