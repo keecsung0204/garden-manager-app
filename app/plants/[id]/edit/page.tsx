@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
+import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 
 export default async function EditPlantPage({
   params,
@@ -293,9 +294,7 @@ export default async function EditPlantPage({
             
               <form action={deleteNote} className="note-delete-form">
                 <input type="hidden" name="noteId" value={note.id} />
-                <button type="submit" className="delete-button">
-                  Delete
-                </button>
+                <ConfirmDeleteButton />
               </form>
             </div>
             ))}
