@@ -116,6 +116,21 @@ export default async function EditPlantPage({
     redirect(`/plants/${plant.id}/edit`);
   }
 
+  async function deleteNote(formData: FormData) {
+    "use server";
+  
+    const noteId = formData.get("noteId") as string;
+  
+    await prisma.plantNote.delete({
+      where: {
+        id: Number(noteId),
+      },
+    });
+  
+    revalidatePath(`/plants/${plant.id}/edit`);
+    redirect(`/plants/${plant.id}/edit`);
+  }
+
   return (
     <main className="edit-page">
       <h1>Edit Plant</h1>
@@ -265,17 +280,24 @@ export default async function EditPlantPage({
           <div className="note-list">
             {plant.notes.map((note) => (
               <div className="note-card" key={note.id}>
-                <div className="note-header">
-                  <span className="note-type">
-                    {note.noteTypeRef?.name || note.noteType || "Note"}
-                  </span>
-                  <span className="note-date">
-                    {note.noteDate.toLocaleString()}
-                  </span>
-                </div>
-
-                <p className="note-content">{note.content}</p>
+              <div className="note-header">
+                <span className="note-type">
+                  {note.noteTypeRef?.name || note.noteType || "Note"}
+                </span>
+                <span className="note-date">
+                  {note.noteDate.toLocaleString()}
+                </span>
               </div>
+            
+              <p className="note-content">{note.content}</p>
+            
+              <form action={deleteNote} className="note-delete-form">
+                <input type="hidden" name="noteId" value={note.id} />
+                <button type="submit" className="delete-button">
+                  Delete
+                </button>
+              </form>
+            </div>
             ))}
           </div>
         )}

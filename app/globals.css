@@ -250,3 +250,21 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.note-delete-form {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.delete-button {
+  border: 1px solid #c9a3a3;
+  background: #fff5f5;
+  color: #8a2f2f;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #ffe5e5;
+}
