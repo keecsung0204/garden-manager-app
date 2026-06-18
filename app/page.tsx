@@ -14,7 +14,9 @@ async function getNextPlantCode() {
   }
 
   const lastNumber = Number(lastPlant.plantCode.replace("P", ""));
-  const nextNumber = Number.isNaN(lastNumber) ? lastPlant.id + 1 : lastNumber + 1;
+  const nextNumber = Number.isNaN(lastNumber)
+    ? lastPlant.id + 1
+    : lastNumber + 1;
 
   return `P${String(nextNumber).padStart(3, "0")}`;
 }
@@ -72,7 +74,10 @@ export default async function Home() {
         plantName,
         areaId: areaId ? Number(areaId) : null,
         categoryId: categoryId ? Number(categoryId) : null,
-        identifyStatus: (identifyStatus || "Unknown") as "Unknown" | "Tentative" | "Confirmed",
+        identifyStatus: (identifyStatus || "Unknown") as
+          | "Unknown"
+          | "Tentative"
+          | "Confirmed",
         statusId: statusId ? Number(statusId) : null,
         scientificName: scientificName || null,
       },
@@ -247,8 +252,17 @@ export default async function Home() {
                     </span>
                   </td>
                   <td>{plant.scientificName || "-"}</td>
-                  <td>
-                    <Link href={`/plants/${plant.id}/edit`}>Edit</Link>
+                  <td className="action-links">
+                    <Link className="link-button" href={`/plants/${plant.id}`}>
+                      View
+                    </Link>
+
+                    <Link
+                      className="link-button secondary"
+                      href={`/plants/${plant.id}/edit`}
+                    >
+                      Edit
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -256,7 +270,6 @@ export default async function Home() {
           </table>
         )}
       </section>
-
     </main>
   );
 }
