@@ -108,11 +108,11 @@ export default async function PlantDetailPage({
       </section>
 
       <div className="page-actions">
-        <Link className="back-link" href="/">
+        <Link className="link-button secondary" href="/">
           ← Back to Home
         </Link>
 
-        <Link className="back-link" href={`/plants/${plant.id}/edit`}>
+        <Link className="link-button" href={`/plants/${plant.id}/edit`}>
           Edit Plant
         </Link>
       </div>

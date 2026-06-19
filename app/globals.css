@@ -309,3 +309,9 @@ button:disabled {
 .link-button.secondary:hover {
   background: #d6e8ce;
 }
+.page-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 20px;
+}
