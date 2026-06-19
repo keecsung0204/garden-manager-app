@@ -78,10 +78,11 @@ export default async function EditPlantPage({
       | "Tentative"
       | "Confirmed";
     const scientificName = formData.get("scientificName") as string;
+    const currentPlantId = Number(params.id);
 
     await prisma.plant.update({
       where: {
-        id: plant.id,
+        id: currentPlantId,
       },
       data: {
         plantName,
@@ -96,7 +97,7 @@ export default async function EditPlantPage({
     revalidatePath("/");
     revalidatePath(`/plants/${plant.id}/edit`);
 
-    redirect("/");
+    redirect(`/plants/${currentPlantId}`);
   }
 
   async function createNote(formData: FormData) {
@@ -119,15 +120,15 @@ export default async function EditPlantPage({
 
   async function deleteNote(formData: FormData) {
     "use server";
-  
+
     const noteId = formData.get("noteId") as string;
-  
+
     await prisma.plantNote.delete({
       where: {
         id: Number(noteId),
       },
     });
-  
+
     revalidatePath(`/plants/${plant.id}/edit`);
     redirect(`/plants/${plant.id}/edit`);
   }
@@ -281,22 +282,22 @@ export default async function EditPlantPage({
           <div className="note-list">
             {plant.notes.map((note) => (
               <div className="note-card" key={note.id}>
-              <div className="note-header">
-                <span className="note-type">
-                  {note.noteTypeRef?.name || note.noteType || "Note"}
-                </span>
-                <span className="note-date">
-                  {note.noteDate.toLocaleString()}
-                </span>
+                <div className="note-header">
+                  <span className="note-type">
+                    {note.noteTypeRef?.name || note.noteType || "Note"}
+                  </span>
+                  <span className="note-date">
+                    {note.noteDate.toLocaleString()}
+                  </span>
+                </div>
+
+                <p className="note-content">{note.content}</p>
+
+                <form action={deleteNote} className="note-delete-form">
+                  <input type="hidden" name="noteId" value={note.id} />
+                  <ConfirmDeleteButton />
+                </form>
               </div>
-            
-              <p className="note-content">{note.content}</p>
-            
-              <form action={deleteNote} className="note-delete-form">
-                <input type="hidden" name="noteId" value={note.id} />
-                <ConfirmDeleteButton />
-              </form>
-            </div>
             ))}
           </div>
         )}
