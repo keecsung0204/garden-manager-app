@@ -302,8 +302,8 @@ export default async function EditPlantPage({
           </div>
         )}
       </section>
-      <Link className="back-link" href="/">
-        ← Back to Home
+      <Link className="back-link" href={`/plants/${plant.id}`}>
+        ← Back to Detail
       </Link>
     </main>
   );
