@@ -179,34 +179,6 @@ export default async function Home() {
         </form>
       </section>
 
-      {/* <section>
-        <h2>Plants</h2>
-
-        <table border={1} cellPadding={8}>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Plant Name</th>
-              <th>Area</th>
-              <th>Category</th>
-              <th>Identify</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {plants.map((plant) => (
-              <tr key={plant.id}>
-                <td>{plant.plantCode}</td>
-                <td>{plant.plantName}</td>
-                <td>{plant.area?.name}</td>
-                <td>{plant.category?.name}</td>
-                <td>{plant.identifyStatus}</td>
-                <td>{plant.status?.name || "-"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section> */}
       <section>
         <h2>Plants ({plants.length})</h2>
 
@@ -230,7 +202,11 @@ export default async function Home() {
               {plants.map((plant) => (
                 <tr key={plant.id}>
                   <td>{plant.plantCode}</td>
-                  <td>{plant.plantName}</td>
+                  <td>
+                    <Link className="plant-name-link" href={`/plants/${plant.id}`}>
+                      {plant.plantName}
+                    </Link>
+                  </td>
                   <td>
                     {plant.area
                       ? `${plant.area.areaCode} - ${plant.area.name}`
@@ -244,9 +220,8 @@ export default async function Home() {
                   <td>{plant.identifyStatus}</td>
                   <td>
                     <span
-                      className={`status-pill status-${
-                        plant.status?.name?.toLowerCase() || "none"
-                      }`}
+                      className={`status-pill status-${plant.status?.name?.toLowerCase() || "none"
+                        }`}
                     >
                       {plant.status?.name || "-"}
                     </span>

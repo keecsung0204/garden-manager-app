@@ -315,3 +315,12 @@ button:disabled {
   align-items: center;
   margin-top: 20px;
 }
+.plant-name-link {
+  color: #2f5d3a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.plant-name-link:hover {
+  text-decoration: underline;
+}
