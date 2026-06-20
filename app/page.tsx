@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import StatusFilter from "@/app/components/StatusFilter";
 
 export default async function Home({
   searchParams,
@@ -68,18 +69,10 @@ export default async function Home({
                 <th></th>
                 <th></th>
                 <th>
-                  <form action="/" method="get">
-                    <select name="statusId" defaultValue={searchParams?.statusId || ""}>
-                      <option value="">All Status</option>
-                      {statuses.map((status) => (
-                        <option key={status.id} value={status.id}>
-                          {status.name}
-                        </option>
-                      ))}
-                    </select>
-
-                    <button type="submit">Apply</button>
-                  </form>
+                  <StatusFilter
+                    statuses={statuses}
+                    selectedStatusId={searchParams?.statusId || ""}
+                  />
                 </th>
                 <th></th>
               </tr>
