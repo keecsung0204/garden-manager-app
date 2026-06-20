@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
+import PlantForm from "@/app/components/PlantForm";
 
 export default async function EditPlantPage({
   params,
@@ -137,99 +138,22 @@ export default async function EditPlantPage({
     <main className="edit-page">
       <h1>Edit Plant</h1>
 
-      <form className="detail-card" action={updatePlant}>
-        <div className="detail-row">
-          <span className="detail-label">Code</span>
-          <span>{plant.plantCode}</span>
-        </div>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="plantName">
-            Plant Name
-          </label>
-          <input
-            id="plantName"
-            name="plantName"
-            defaultValue={plant.plantName}
-            required
-          />
-        </div>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="areaId">
-            Area
-          </label>
-
-          <select
-            id="areaId" name="areaId" defaultValue={plant.areaId || ""}>
-            <option value="">장소 선택</option>
-            {areas.map((area) => (
-              <option key={area.id} value={area.id}> {area.areaCode} - {area.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="categoryId">
-            Category
-          </label>
-
-          <select
-            id="categoryId" name="categoryId" defaultValue={plant.categoryId || ""}>
-            <option value=""> 분류 선택</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}> {category.categoryCode} - {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="statusId">
-            Plant Status:
-          </label>
-
-          <select
-            id="statusId" name="statusId" defaultValue={plant.statusId || ""}>
-            <option value=""> 상태 선택</option>
-            {statuses.map((status) => (
-              <option key={status.id} value={status.id}> {status.statusCode} - {status.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="identifyStatus">
-            Identify Status
-          </label>
-          <select
-            id="identifyStatus"
-            name="identifyStatus"
-            defaultValue={plant.identifyStatus}
-          >
-            <option value="Unknown">Unknown</option>
-            <option value="Tentative">Tentative</option>
-            <option value="Confirmed">Confirmed</option>
-          </select>
-
-        </div>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="scientificName">
-            Scientific Name
-          </label>
-          <input
-            id="scientificName"
-            name="scientificName"
-            defaultValue={plant.scientificName || ""}
-          />
-        </div>
-        <div className="form-actions">
-          <button type="submit">Save Changes</button>
-        </div>
-      </form>
+      <PlantForm
+        action={updatePlant}
+        areas={areas}
+        categories={categories}
+        statuses={statuses}
+        defaultValues={{
+          plantCode: plant.plantCode,
+          plantName: plant.plantName,
+          areaId: plant.areaId,
+          categoryId: plant.categoryId,
+          identifyStatus: plant.identifyStatus,
+          statusId: plant.statusId,
+          scientificName: plant.scientificName,
+        }}
+        submitLabel="Save Plant"
+      />
 
       <form
         key={plant.notes.length}
