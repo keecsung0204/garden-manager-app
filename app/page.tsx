@@ -1,16 +1,36 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: {
+    statusId?: string;
+  };
+}) {
+  const selectedStatusId = searchParams?.statusId
+    ? Number(searchParams.statusId)
+    : undefined;
+
+  const statuses = await prisma.plantStatus.findMany({
+    orderBy: {
+      displayOrder: "asc",
+    },
+  });
 
   const plants = await prisma.plant.findMany({
-    orderBy: {
-      plantCode: "asc",
-    },
+    where: selectedStatusId
+      ? {
+        statusId: selectedStatusId,
+      }
+      : {},
     include: {
       area: true,
       category: true,
       status: true,
+    },
+    orderBy: {
+      plantCode: "asc",
     },
   });
 
@@ -32,14 +52,36 @@ export default async function Home() {
           <table className="plant-table">
             <thead>
               <tr>
-                <th>Code</th>
+                <th>Plant Code</th>
                 <th>Plant Name</th>
                 <th>Area</th>
                 <th>Category</th>
-                <th>Identify</th>
+                <th>Identify Status</th>
                 <th>Status</th>
-                <th>Scientific Name</th>
-                <th>Action</th>
+                <th>Actions</th>
+              </tr>
+
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>
+                  <form action="/" method="get">
+                    <select name="statusId" defaultValue={searchParams?.statusId || ""}>
+                      <option value="">All Status</option>
+                      {statuses.map((status) => (
+                        <option key={status.id} value={status.id}>
+                          {status.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    <button type="submit">Apply</button>
+                  </form>
+                </th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -70,7 +112,6 @@ export default async function Home() {
                       {plant.status?.name || "-"}
                     </span>
                   </td>
-                  <td>{plant.scientificName || "-"}</td>
                   <td className="action-links">
 
                     <Link
