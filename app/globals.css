@@ -324,3 +324,36 @@ button:disabled {
 .plant-name-link:hover {
   text-decoration: underline;
 }
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row label {
+  font-weight: 700;
+  color: #2f3a2f;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  max-width: 420px;
+  padding: 8px 10px;
+  border: 1px solid #c7d7c0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 20px;
+}

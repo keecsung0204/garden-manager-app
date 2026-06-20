@@ -59,97 +59,79 @@ export default async function NewPlantPage() {
     const nextPlantCode = `P${String(plantCount + 1).padStart(3, "0")}`;
 
     return (
-        <main style={{ padding: "20px", maxWidth: "900px" }}>
+        <main className="edit-page">
             <h1>Add New Plant</h1>
             <div className="page-actions">
                 <Link className="link-button secondary" href="/">
                     ← Back to Home
                 </Link>
             </div>
-            <section style={{ marginBottom: "40px" }}>
+            <section className="detail-card">
                 <h2>Plant Information</h2>
 
-                <form action={createPlant}>
-                    <div style={{ marginBottom: "10px" }}>
-                        <label>
-                            Plant Code:
-                            <br />
-                            <input name="plantCode" defaultValue={nextPlantCode} />
-                        </label>
+                <form className="form-grid" action={createPlant}>
+
+                    <div className="form-row">
+                        <label htmlFor="plantCode">Plant Code</label>
+                        <input id="plantCode" name="plantCode" defaultValue={nextPlantCode} />
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                        <label>
-                            Plant Name:
-                            <br />
-                            <input name="plantName" required />
-                        </label>
+                    <div className="form-row">
+                        <label htmlFor="plantName">Plant Name</label>
+                        <input id="plantName" name="plantName" required />
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                        <label>
-                            Area:
-                            <br />
-                            <select name="areaId" required defaultValue="">
-                                <option value="">장소 선택</option>
-                                {areas.map((area) => (
-                                    <option key={area.id} value={area.id}>
-                                        {area.areaCode} - {area.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
+                    <div className="form-row">
+                        <label htmlFor="areaId">Area</label>
+                        <select id="areaId" name="areaId" required defaultValue="">
+                            <option value="">장소 선택</option>
+                            {areas.map((area) => (
+                                <option key={area.id} value={area.id}>
+                                    {area.areaCode} - {area.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                        <label>
-                            Category:
-                            <br />
-                            <select name="categoryId" required defaultValue="">
-                                <option value="">분류 선택</option>
-                                {categories.map((category) => (
-                                    <option key={category.id} value={category.id}>
-                                        {category.categoryCode} - {category.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
+                    <div className="form-row">
+                        <label htmlFor="categoryId">Category</label>
+                        <select id="CategoryId" name="categoryId" required defaultValue="">
+                            <option value="">분류 선택</option>
+                            {categories.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                    {category.categoryCode} - {category.name}
+                                </option>
+                            ))}
+                        </select>
+
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                        <label>
-                            Identify Status:
-                            <br />
-                            <select name="identifyStatus" defaultValue="Unknown">
-                                <option value="Unknown">Unknown</option>
-                                <option value="Tentative">Tentative</option>
-                                <option value="Confirmed">Confirmed</option>
-                            </select>
-                        </label>
+                    <div className="form-row">
+                        <label htmlFor="identifyStatus">Identify Status</label>
+                        <select id="identifyStatus" name="identifyStatus" defaultValue="Unknown">
+                            <option value="Unknown">Unknown</option>
+                            <option value="Tentative">Tentative</option>
+                            <option value="Confirmed">Confirmed</option>
+                        </select>
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                        <label>
-                            Plant Status:
-                            <br />
-                            <select name="statusId" required defaultValue="">
-                                <option value="">상태 선택</option>
-                                {statuses.map((status) => (
-                                    <option key={status.id} value={status.id}>
-                                        {status.statusCode} - {status.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
+                    <div className="form-row">
+                        <label htmlFor="statusId">Plant Status</label>
+                        <select id="statusId" name="statusId" required defaultValue="">
+                            <option value="">상태 선택</option>
+                            {statuses.map((status) => (
+                                <option key={status.id} value={status.id}>
+                                    {status.statusCode} - {status.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                        <label>
-                            Scientific Name:
-                            <br />
-                            <input name="scientificName" />
-                        </label>
+                    <div className="form-row">
+                        <label htmlFor="scientificName">Scientific Name</label>
+                        <input id="scientificName" name="scientificName" />
                     </div>
+
 
                     <button type="submit">Save Plant</button>
                 </form>
