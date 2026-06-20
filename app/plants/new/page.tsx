@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import PlantForm from "@/app/components/PlantForm";
+import { getPlantFormOptions } from "@/lib/getPlantFormOptions";
 
 
 async function createPlant(formData: FormData) {
@@ -38,24 +39,8 @@ async function createPlant(formData: FormData) {
 }
 
 export default async function NewPlantPage() {
-    const areas = await prisma.area.findMany({
-        orderBy: {
-            areaCode: "asc",
-        },
-    });
 
-    const categories = await prisma.plantCategory.findMany({
-        orderBy: {
-            categoryCode: "asc",
-        },
-    });
-
-    const statuses = await prisma.plantStatus.findMany({
-        orderBy: {
-            displayOrder: "asc",
-        },
-    });
-
+    const { areas, categories, statuses } = await getPlantFormOptions();
     const plantCount = await prisma.plant.count();
     const nextPlantCode = `P${String(plantCount + 1).padStart(3, "0")}`;
 

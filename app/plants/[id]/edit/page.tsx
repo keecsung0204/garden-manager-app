@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 import PlantForm from "@/app/components/PlantForm";
+import { getPlantFormOptions } from "@/lib/getPlantFormOptions";
 
 export default async function EditPlantPage({
   params,
@@ -12,24 +13,7 @@ export default async function EditPlantPage({
   params: { id: string };
 }) {
   const plantId = Number(params.id);
-
-  const areas = await prisma.area.findMany({
-    orderBy: {
-      areaCode: "asc",
-    },
-  });
-
-  const categories = await prisma.plantCategory.findMany({
-    orderBy: {
-      categoryCode: "asc",
-    },
-  });
-
-  const statuses = await prisma.plantStatus.findMany({
-    orderBy: {
-      displayOrder: "asc",
-    },
-  });
+  const { areas, categories, statuses } = await getPlantFormOptions();
 
   const noteTypes = await prisma.noteType.findMany({
     where: {
