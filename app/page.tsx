@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <main style={{ padding: "20px", maxWidth: "900px" }}>
       <h1>Garden Manager</h1>
-      <div className="page-actions">
+      <div className="home-actions">
         <Link className="link-button" href="/plants/new">
           Add New Plant
         </Link>
@@ -72,9 +72,6 @@ export default async function Home() {
                   </td>
                   <td>{plant.scientificName || "-"}</td>
                   <td className="action-links">
-                    <Link className="link-button" href={`/plants/${plant.id}`}>
-                      View
-                    </Link>
 
                     <Link
                       className="link-button secondary"

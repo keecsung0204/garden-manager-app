@@ -357,3 +357,7 @@ button:disabled {
   align-items: center;
   margin-top: 20px;
 }
+.home-actions {
+  margin-top: 12px;
+  margin-bottom: 28px;
+}
