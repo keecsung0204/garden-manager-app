@@ -1,16 +1,23 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import StatusFilter from "@/app/components/StatusFilter";
+import AreaFilter from "@/app/components/AreaFilter";
 
 export default async function Home({
   searchParams,
 }: {
   searchParams?: {
     statusId?: string;
+    areaId?: string;
   };
+
 }) {
+
   const selectedStatusId = searchParams?.statusId
     ? Number(searchParams.statusId)
+    : undefined;
+  const selectedAreaId = searchParams?.areaId
+    ? Number(searchParams.areaId)
     : undefined;
 
   const statuses = await prisma.plantStatus.findMany({
@@ -18,13 +25,17 @@ export default async function Home({
       displayOrder: "asc",
     },
   });
+  const areas = await prisma.area.findMany({
+    orderBy: {
+      areaCode: "asc",
+    },
+  });
 
   const plants = await prisma.plant.findMany({
-    where: selectedStatusId
-      ? {
-        statusId: selectedStatusId,
-      }
-      : {},
+    where: {
+      ...(selectedStatusId ? { statusId: selectedStatusId } : {}),
+      ...(selectedAreaId ? { areaId: selectedAreaId } : {}),
+    },
     include: {
       area: true,
       category: true,
@@ -47,7 +58,6 @@ export default async function Home({
       <section>
         <h2>Plants ({plants.length})</h2>
 
-
         <table className="plant-table">
           <thead>
             <tr>
@@ -63,7 +73,12 @@ export default async function Home({
             <tr>
               <th></th>
               <th></th>
-              <th></th>
+              <th>
+                <AreaFilter
+                  areas={areas}
+                  selectedAreaId={searchParams?.areaId || ""}
+                />
+              </th>
               <th></th>
               <th></th>
               <th>
