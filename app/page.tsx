@@ -47,38 +47,41 @@ export default async function Home({
       <section>
         <h2>Plants ({plants.length})</h2>
 
-        {plants.length === 0 ? (
-          <p>등록된 Plant가 없습니다.</p>
-        ) : (
-          <table className="plant-table">
-            <thead>
-              <tr>
-                <th>Plant Code</th>
-                <th>Plant Name</th>
-                <th>Area</th>
-                <th>Category</th>
-                <th>Identify Status</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
 
+        <table className="plant-table">
+          <thead>
+            <tr>
+              <th>Plant Code</th>
+              <th>Plant Name</th>
+              <th>Area</th>
+              <th>Category</th>
+              <th>Identify Status</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>
+                <StatusFilter
+                  statuses={statuses}
+                  selectedStatusId={searchParams?.statusId || ""}
+                />
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {plants.length === 0 ? (
               <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>
-                  <StatusFilter
-                    statuses={statuses}
-                    selectedStatusId={searchParams?.statusId || ""}
-                  />
-                </th>
-                <th></th>
+                <td colSpan={7}>해당 조건의 Plant가 없습니다.</td>
               </tr>
-            </thead>
-            <tbody>
-              {plants.map((plant) => (
+            ) : (
+              plants.map((plant) => (
                 <tr key={plant.id}>
                   <td>{plant.plantCode}</td>
                   <td>
@@ -115,10 +118,10 @@ export default async function Home({
                     </Link>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              )))}
+          </tbody>
+        </table>
+
       </section>
     </main>
   );
