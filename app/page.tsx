@@ -61,8 +61,12 @@ export default async function Home({
     <main style={{ padding: "20px", maxWidth: "900px" }}>
       <h1>Garden Manager</h1>
       <div className="home-actions">
-        <Link className="link-button" href="/plants/new">
+        <Link href="/plants/new" className="link-button">
           Add New Plant
+        </Link>
+
+        <Link href="/" className="link-button secondary">
+          Clear Filters
         </Link>
       </div>
 
