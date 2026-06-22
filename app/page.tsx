@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import StatusFilter from "@/app/components/StatusFilter";
 import AreaFilter from "@/app/components/AreaFilter";
+import CategoryFilter from "@/app/components/CategoryFilter";
 
 export default async function Home({
   searchParams,
@@ -9,6 +10,7 @@ export default async function Home({
   searchParams?: {
     statusId?: string;
     areaId?: string;
+    categoryId?: string;
   };
 
 }) {
@@ -18,6 +20,9 @@ export default async function Home({
     : undefined;
   const selectedAreaId = searchParams?.areaId
     ? Number(searchParams.areaId)
+    : undefined;
+  const selectedCategoryId = searchParams?.categoryId
+    ? Number(searchParams.categoryId)
     : undefined;
 
   const statuses = await prisma.plantStatus.findMany({
@@ -30,11 +35,17 @@ export default async function Home({
       areaCode: "asc",
     },
   });
+  const categories = await prisma.plantCategory.findMany({
+    orderBy: {
+      categoryCode: "asc",
+    },
+  });
 
   const plants = await prisma.plant.findMany({
     where: {
       ...(selectedStatusId ? { statusId: selectedStatusId } : {}),
       ...(selectedAreaId ? { areaId: selectedAreaId } : {}),
+      ...(selectedCategoryId ? { categoryId: selectedCategoryId } : {}),
     },
     include: {
       area: true,
@@ -79,7 +90,12 @@ export default async function Home({
                   selectedAreaId={searchParams?.areaId || ""}
                 />
               </th>
-              <th></th>
+              <th>
+                <CategoryFilter
+                  categories={categories}
+                  selectedCategoryId={searchParams?.categoryId || ""}
+                />
+              </th>
               <th></th>
               <th>
                 <StatusFilter
