@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
+import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 
 export default async function PlantDetailPage({
   params,
@@ -68,26 +69,34 @@ export default async function PlantDetailPage({
     revalidatePath(`/plants/${currentPlantId}`);
     redirect(`/plants/${currentPlantId}`);
   }
-  async function createNote(formData: FormData) {
+
+  async function deleteNote(formData: FormData) {
     "use server";
 
-    const noteTypeId = formData.get("noteTypeId") as string;
-    const content = formData.get("content") as string;
+    const noteId = formData.get("noteId") as string;
 
-    await prisma.plantNote.create({
-      data: {
-        plantId: plant.id,
-        noteTypeId: noteTypeId ? Number(noteTypeId) : null,
-        content,
+    await prisma.plantNote.delete({
+      where: {
+        id: Number(noteId),
       },
     });
 
-    revalidatePath(`/plants/${plant.id}`);
-    redirect(`/plants/${plant.id}`);
+    revalidatePath(`/plants/${currentPlantId}`);
+    redirect(`/plants/${currentPlantId}`);
   }
   return (
     <main className="edit-page">
       <h1>{plant.plantName}</h1>
+
+      <div className="page-actions">
+        <Link className="link-button secondary" href="/">
+          ← Back to Home
+        </Link>
+
+        <Link className="link-button" href={`/plants/${plant.id}/edit`}>
+          Edit Plant
+        </Link>
+      </div>
 
       <section className="detail-card">
         <h2>Plant Detail</h2>
@@ -184,21 +193,16 @@ export default async function PlantDetailPage({
                 </div>
 
                 <p className="note-content">{note.content}</p>
+                <form action={deleteNote} className="note-delete-form">
+                  <input type="hidden" name="noteId" value={note.id} />
+                  <ConfirmDeleteButton />
+                </form>
               </div>
             ))}
           </div>
         )}
       </section>
 
-      <div className="page-actions">
-        <Link className="link-button secondary" href="/">
-          ← Back to Home
-        </Link>
-
-        <Link className="link-button" href={`/plants/${plant.id}/edit`}>
-          Edit Plant
-        </Link>
-      </div>
     </main>
   );
 }
