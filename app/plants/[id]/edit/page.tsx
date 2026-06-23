@@ -95,9 +95,11 @@ export default async function EditPlantPage({
         submitLabel="Save Plant"
       />
 
-      <Link className="back-link" href={`/plants/${plant.id}`}>
-        ← Back to Detail
-      </Link>
+      <div className="page-actions">
+        <Link className="link-button secondary" href={`/plants/${plant.id}`}>
+          ← Back to Detail
+        </Link>
+      </div>
     </main>
   );
 
