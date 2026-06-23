@@ -1,5 +1,8 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import SubmitButton from "@/app/components/SubmitButton";
 
 export default async function PlantDetailPage({
   params,
@@ -7,6 +10,14 @@ export default async function PlantDetailPage({
   params: { id: string };
 }) {
   const plantId = Number(params.id);
+  const noteTypes = await prisma.noteType.findMany({
+    where: {
+      isActive: true,
+    },
+    orderBy: {
+      displayOrder: "asc",
+    },
+  });
 
   const plant = await prisma.plant.findUnique({
     where: {
@@ -38,6 +49,42 @@ export default async function PlantDetailPage({
     );
   }
 
+  const currentPlantId = plant.id;
+
+  async function createNote(formData: FormData) {
+    "use server";
+
+    const noteTypeId = formData.get("noteTypeId") as string;
+    const content = formData.get("content") as string;
+
+    await prisma.plantNote.create({
+      data: {
+        plantId: currentPlantId,
+        noteTypeId: noteTypeId ? Number(noteTypeId) : null,
+        content,
+      },
+    });
+
+    revalidatePath(`/plants/${currentPlantId}`);
+    redirect(`/plants/${currentPlantId}`);
+  }
+  async function createNote(formData: FormData) {
+    "use server";
+
+    const noteTypeId = formData.get("noteTypeId") as string;
+    const content = formData.get("content") as string;
+
+    await prisma.plantNote.create({
+      data: {
+        plantId: plant.id,
+        noteTypeId: noteTypeId ? Number(noteTypeId) : null,
+        content,
+      },
+    });
+
+    revalidatePath(`/plants/${plant.id}`);
+    redirect(`/plants/${plant.id}`);
+  }
   return (
     <main className="edit-page">
       <h1>{plant.plantName}</h1>
@@ -81,6 +128,42 @@ export default async function PlantDetailPage({
           <span>{plant.scientificName || "-"}</span>
         </div>
       </section>
+
+      <form
+        key={plant.notes.length}
+        className="detail-card"
+        action={createNote}
+      >
+        <h2>Add Note</h2>
+
+        <div className="detail-row">
+          <label className="detail-label" htmlFor="noteTypeId">
+            Note Type
+          </label>
+
+          <select id="noteTypeId" name="noteTypeId" defaultValue="">
+            <option value="">Note Type 선택</option>
+
+            {noteTypes.map((noteType) => (
+              <option key={noteType.id} value={noteType.id}>
+                {noteType.name} - {noteType.description}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="detail-row">
+          <label className="detail-label" htmlFor="content">
+            Content
+          </label>
+
+          <textarea id="content" name="content" rows={4} required />
+        </div>
+
+        <div className="form-actions">
+          <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
+        </div>
+      </form>
 
       <section className="detail-card">
         <h2>Recent Notes</h2>
