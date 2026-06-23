@@ -2,8 +2,6 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import SubmitButton from "@/app/components/SubmitButton";
-import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 import PlantForm from "@/app/components/PlantForm";
 import { getPlantFormOptions } from "@/lib/getPlantFormOptions";
 
@@ -14,15 +12,6 @@ export default async function EditPlantPage({
 }) {
   const plantId = Number(params.id);
   const { areas, categories, statuses } = await getPlantFormOptions();
-
-  const noteTypes = await prisma.noteType.findMany({
-    where: {
-      isActive: true,
-    },
-    orderBy: {
-      displayOrder: "asc",
-    },
-  });
 
   const plant = await prisma.plant.findUnique({
     where: {
@@ -85,39 +74,6 @@ export default async function EditPlantPage({
     redirect(`/plants/${currentPlantId}`);
   }
 
-  async function createNote(formData: FormData) {
-    "use server";
-
-    const noteTypeId = formData.get("noteTypeId") as string;
-    const content = formData.get("content") as string;
-
-    await prisma.plantNote.create({
-      data: {
-        plantId: plant.id,
-        noteTypeId: noteTypeId ? Number(noteTypeId) : null,
-        content,
-      },
-    });
-
-    revalidatePath(`/plants/${plant.id}/edit`);
-    redirect(`/plants/${plant.id}/edit`);
-  }
-
-  async function deleteNote(formData: FormData) {
-    "use server";
-
-    const noteId = formData.get("noteId") as string;
-
-    await prisma.plantNote.delete({
-      where: {
-        id: Number(noteId),
-      },
-    });
-
-    revalidatePath(`/plants/${plant.id}/edit`);
-    redirect(`/plants/${plant.id}/edit`);
-  }
-
   return (
     <main className="edit-page">
       <h1>Edit Plant</h1>
@@ -139,77 +95,6 @@ export default async function EditPlantPage({
         submitLabel="Save Plant"
       />
 
-      <form
-        key={plant.notes.length}
-        className="detail-card"
-        action={createNote}
-      >
-        <h2>Add Note</h2>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="noteType">
-            Note Type
-          </label>
-
-          <select id="noteTypeId" name="noteTypeId" defaultValue="">
-            <option value="">Note Type 선택</option>
-
-            {noteTypes.map((noteType) => (
-              <option key={noteType.id} value={noteType.id}>
-                {noteType.name} - {noteType.description}
-              </option>
-            ))}
-          </select>
-
-        </div>
-
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="content">
-            Content
-          </label>
-
-          <textarea
-            id="content"
-            name="content"
-            rows={4}
-            required
-          />
-        </div>
-
-        <div className="form-actions">
-          <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
-        </div>
-      </form>
-
-      <section className="detail-card">
-        <h2>Notes</h2>
-
-        {plant.notes.length === 0 ? (
-          <p>아직 기록이 없습니다.</p>
-        ) : (
-          <div className="note-list">
-            {plant.notes.map((note) => (
-              <div className="note-card" key={note.id}>
-                <div className="note-header">
-                  <span className="note-type">
-                    {note.noteTypeRef?.name || note.noteType || "Note"}
-                  </span>
-                  <span className="note-date">
-                    {note.noteDate.toLocaleString()}
-                  </span>
-                </div>
-
-                <p className="note-content">{note.content}</p>
-
-                <form action={deleteNote} className="note-delete-form">
-                  <input type="hidden" name="noteId" value={note.id} />
-                  <ConfirmDeleteButton />
-                </form>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
       <Link className="back-link" href={`/plants/${plant.id}`}>
         ← Back to Detail
       </Link>
