@@ -70,7 +70,7 @@ export default async function Home({
         </Link>
       </div>
 
-      <section>
+      <section className="detail-card">
         <h2>Plants ({plants.length})</h2>
 
         <table className="plant-table">

@@ -359,8 +359,11 @@ button:disabled {
   margin-top: 20px;
 }
 .home-actions {
-  margin-top: 12px;
-  margin-bottom: 28px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 18px;
 }
 .add-note-form {
   display: flex;
