@@ -199,10 +199,17 @@ export default async function PlantDetailPage({
                 </div>
 
                 <p className="note-content">{note.content}</p>
-                <form action={deleteNote} className="note-delete-form">
-                  <input type="hidden" name="noteId" value={note.id} />
-                  <ConfirmDeleteButton />
-                </form>
+
+                <div className="note-actions">
+                  <Link className="link-button secondary" href={`/notes/${note.id}/edit`}>
+                    Edit
+                  </Link>
+
+                  <form action={deleteNote} className="note-delete-form">
+                    <input type="hidden" name="noteId" value={note.id} />
+                    <ConfirmDeleteButton />
+                  </form>
+                </div>
               </div>
             ))}
           </div>

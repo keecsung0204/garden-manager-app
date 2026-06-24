@@ -399,3 +399,23 @@ button:disabled {
   min-width: 140px;
   text-align: center;
 }
+.note-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.note-actions .link-button,
+.note-actions button {
+  width: 90px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.note-actions .note-delete-form {
+  margin: 0;
+}
