@@ -188,7 +188,13 @@ export default async function PlantDetailPage({
                     {note.noteTypeRef?.name || note.noteType || "Note"}
                   </span>
                   <span className="note-date">
-                    {note.noteDate.toLocaleString()}
+                    {note.noteDate.toLocaleString([], {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
                   </span>
                 </div>
 
