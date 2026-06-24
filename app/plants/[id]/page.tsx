@@ -140,13 +140,13 @@ export default async function PlantDetailPage({
 
       <form
         key={plant.notes.length}
-        className="detail-card"
+        className="detail-card add-note-form"
         action={createNote}
       >
         <h2>Add Note</h2>
 
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="noteTypeId">
+        <div className="form-row">
+          <label htmlFor="noteTypeId">
             Note Type
           </label>
 
@@ -161,8 +161,8 @@ export default async function PlantDetailPage({
           </select>
         </div>
 
-        <div className="detail-row">
-          <label className="detail-label" htmlFor="content">
+        <div className="form-row">
+          <label htmlFor="content">
             Content
           </label>
 

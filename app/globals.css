@@ -214,45 +214,46 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 16px;
 }
 
 .note-card {
-  background: #f8faf6;
-  border: 1px solid #d9e2d3;
-  border-radius: 12px;
   padding: 14px 16px;
+  border: 1px solid #d7e2d0;
+  border-radius: 10px;
+  background: #fbfdf9;
 }
 
 .note-header {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
+  align-items: center;
   margin-bottom: 8px;
-  font-size: 14px;
 }
 
 .note-type {
   font-weight: 700;
-  color: #2f5d3a;
+  color: #2f3a2f;
 }
 
 .note-date {
-  color: #6b7280;
+  font-size: 13px;
+  color: #667066;
   white-space: nowrap;
 }
 
 .note-content {
-  margin: 0;
+  margin: 0 0 10px 0;
   line-height: 1.5;
 }
+
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 .note-delete-form {
-  margin-top: 10px;
-  text-align: right;
+  margin-top: 6px;
 }
 
 .delete-button {
@@ -270,9 +271,9 @@ button:disabled {
 }
 .page-actions {
   display: flex;
-  gap: 20px;
+  gap: 12px;
   align-items: center;
-  margin-top: 20px;
+  margin: 16px 0 20px;
 }
 .action-links {
   display: flex;
@@ -360,4 +361,38 @@ button:disabled {
 .home-actions {
   margin-top: 12px;
   margin-bottom: 28px;
+}
+.add-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add-note-form h2 {
+  margin-bottom: 4px;
+}
+
+.add-note-form .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.add-note-form select,
+.add-note-form textarea {
+  width: 100%;
+  max-width: 680px;
+}
+
+.add-note-form .form-actions {
+  margin-top: 4px;
+}
+.detail-card h2 {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+.page-actions .link-button {
+  min-width: 140px;
+  text-align: center;
 }
