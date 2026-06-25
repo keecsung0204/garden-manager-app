@@ -57,12 +57,14 @@ export default async function PlantDetailPage({
 
     const noteTypeId = formData.get("noteTypeId") as string;
     const content = formData.get("content") as string;
+    const noteDate = formData.get("noteDate") as string;
 
     await prisma.plantNote.create({
       data: {
         plantId: currentPlantId,
         noteTypeId: noteTypeId ? Number(noteTypeId) : null,
         content,
+        ...(noteDate ? { noteDate: new Date(noteDate) } : {}),
       },
     });
 
@@ -144,6 +146,16 @@ export default async function PlantDetailPage({
         action={createNote}
       >
         <h2>Add Note</h2>
+
+        <div className="form-row">
+          <label htmlFor="noteDate">Note Date</label>
+
+          <input
+            id="noteDate"
+            name="noteDate"
+            type="datetime-local"
+          />
+        </div>
 
         <div className="form-row">
           <label htmlFor="noteTypeId">
