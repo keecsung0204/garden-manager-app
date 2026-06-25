@@ -187,29 +187,30 @@ export default async function PlantDetailPage({
                   <span className="note-type">
                     {note.noteTypeRef?.name || note.noteType || "Note"}
                   </span>
-                  <span className="note-date">
-                    {note.noteDate.toLocaleString([], {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                    })}
-                  </span>
+
+                  <div className="note-header-actions">
+                    <span className="note-date">
+                      {note.noteDate.toLocaleString([], {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                      })}
+                    </span>
+
+                    <Link className="link-button secondary" href={`/notes/${note.id}/edit`}>
+                      Edit
+                    </Link>
+
+                    <form action={deleteNote} className="note-delete-form">
+                      <input type="hidden" name="noteId" value={note.id} />
+                      <ConfirmDeleteButton />
+                    </form>
+                  </div>
                 </div>
 
                 <p className="note-content">{note.content}</p>
-
-                <div className="note-actions">
-                  <Link className="link-button secondary" href={`/notes/${note.id}/edit`}>
-                    Edit
-                  </Link>
-
-                  <form action={deleteNote} className="note-delete-form">
-                    <input type="hidden" name="noteId" value={note.id} />
-                    <ConfirmDeleteButton />
-                  </form>
-                </div>
               </div>
             ))}
           </div>

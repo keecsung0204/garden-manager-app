@@ -214,6 +214,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .note-card {
@@ -221,19 +222,13 @@ body {
   border: 1px solid #d7e2d0;
   border-radius: 10px;
   background: #fbfdf9;
-}
-
-.note-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 8px;
+  position: relative;
 }
 
 .note-type {
   font-weight: 700;
   color: #2f3a2f;
+  flex: 1;
 }
 
 .note-date {
@@ -250,10 +245,6 @@ body {
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.note-delete-form {
-  margin-top: 6px;
 }
 
 .delete-button {
@@ -399,23 +390,38 @@ button:disabled {
   min-width: 140px;
   text-align: center;
 }
-.note-actions {
-  display: flex;
-  gap: 10px;
+
+.note-card .note-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  margin-top: 8px;
+  column-gap: 16px;
+  width: 100%;
+  margin-bottom: 8px;
 }
 
-.note-actions .link-button,
-.note-actions button {
-  width: 90px;
-  height: 36px;
+.note-card .note-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  justify-self: end;
+}
+
+.note-card .note-header-actions .link-button,
+.note-card .note-header-actions .delete-button {
+  width: 80px;
+  height: 32px;
+  padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  font-size: 13px;
 }
 
-.note-actions .note-delete-form {
+.note-card .note-header-actions .note-delete-form {
   margin: 0;
+  display: inline-flex;
+  width: auto;
 }
