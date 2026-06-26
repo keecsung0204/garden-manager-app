@@ -36,6 +36,7 @@ export default async function PlantDetailPage({
         },
         include: {
           noteTypeRef: true,
+          photos: true,
         },
       },
     },
@@ -251,7 +252,40 @@ export default async function PlantDetailPage({
                   </div>
                 </div>
 
-                <p className="note-content">{note.content}</p>
+                <div className="note-body">
+                  {note.photos.length > 0 && (
+                    <div className="note-photos">
+                      {note.photos.map((photo) => (
+                        <div key={photo.id}>
+                          <a href={`#photo-${photo.id}`} className="note-photo-link">
+                            <img
+                              className="note-photo"
+                              src={photo.filePath}
+                              alt={photo.caption || photo.fileName}
+                            />
+                          </a>
+
+                          <div id={`photo-${photo.id}`} className="photo-lightbox">
+                            <a className="photo-lightbox-backdrop" href="#"></a>
+
+                            <div className="photo-lightbox-content">
+                              <a className="photo-lightbox-close" href="#">
+                                ×
+                              </a>
+
+                              <img
+                                src={photo.filePath}
+                                alt={photo.caption || photo.fileName}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <p className="note-content">{note.content}</p>
+                </div>
               </div>
             ))}
           </div>
