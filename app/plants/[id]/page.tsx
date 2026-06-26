@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
-import { writeFile } from "fs/promises";
+import { writeFile, unlink } from "fs/promises";
 import path from "path";
 
 export default async function PlantDetailPage({
@@ -90,6 +90,39 @@ export default async function PlantDetailPage({
           filePath,
         },
       });
+    }
+
+    revalidatePath(`/plants/${currentPlantId}`);
+    redirect(`/plants/${currentPlantId}`);
+  }
+  async function deletePhoto(formData: FormData) {
+    "use server";
+
+    const photoId = Number(formData.get("photoId"));
+
+    const photo = await prisma.plantPhoto.findUnique({
+      where: {
+        id: photoId,
+      },
+    });
+
+    if (!photo) {
+      return;
+    }
+
+    await prisma.plantPhoto.delete({
+      where: {
+        id: photoId,
+      },
+    });
+
+    const relativePath = photo.filePath.replace(/^\/+/, "");
+    const fullPath = path.join(process.cwd(), "public", relativePath);
+
+    try {
+      await unlink(fullPath);
+    } catch {
+      // 파일이 이미 없어도 DB 삭제는 성공으로 처리합니다.
     }
 
     revalidatePath(`/plants/${currentPlantId}`);
@@ -279,6 +312,13 @@ export default async function PlantDetailPage({
                               />
                             </div>
                           </div>
+
+                          <form action={deletePhoto} className="photo-delete-form">
+                            <input type="hidden" name="photoId" value={photo.id} />
+                            <button type="submit" className="photo-delete-button">
+                              Delete Photo
+                            </button>
+                          </form>
                         </div>
                       ))}
                     </div>

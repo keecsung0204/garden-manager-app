@@ -507,3 +507,20 @@ button:disabled {
   flex: 1;
   margin: 0;
 }
+.photo-delete-form {
+  margin-top: 6px;
+  text-align: center;
+}
+
+.photo-delete-button {
+  border: none;
+  background: transparent;
+  color: #b42318;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.photo-delete-button:hover {
+  color: #7a271a;
+}
