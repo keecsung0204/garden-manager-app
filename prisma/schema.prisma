@@ -46,6 +46,7 @@ model Plant {
   status          PlantStatus? @relation(fields: [statusId], references: [id])
 
   notes           PlantNote[]
+  photos          PlantPhoto[]
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -64,6 +65,7 @@ model PlantNote {
   noteTypeRef NoteType? @relation(fields: [noteTypeId], references: [id])
 
   content   String
+  photos    PlantPhoto[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -94,6 +96,23 @@ model PlantStatus {
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model PlantPhoto {
+  id        Int      @id @default(autoincrement())
+
+  plantId   Int
+  plant     Plant    @relation(fields: [plantId], references: [id])
+
+  noteId    Int
+  note      PlantNote @relation(fields: [noteId], references: [id])
+
+  fileName  String
+  filePath  String
+  caption   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum IdentifyStatus {
