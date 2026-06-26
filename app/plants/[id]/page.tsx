@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
+import { writeFile } from "fs/promises";
+import path from "path";
 
 export default async function PlantDetailPage({
   params,
@@ -58,8 +60,9 @@ export default async function PlantDetailPage({
     const noteTypeId = formData.get("noteTypeId") as string;
     const content = formData.get("content") as string;
     const noteDate = formData.get("noteDate") as string;
+    const photo = formData.get("photo") as File | null;
 
-    await prisma.plantNote.create({
+    const newNote = await prisma.plantNote.create({
       data: {
         plantId: currentPlantId,
         noteTypeId: noteTypeId ? Number(noteTypeId) : null,
@@ -67,6 +70,26 @@ export default async function PlantDetailPage({
         ...(noteDate ? { noteDate: new Date(noteDate) } : {}),
       },
     });
+
+    if (photo && photo.size > 0) {
+      const bytes = await photo.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const fileName = `${Date.now()}-${photo.name}`;
+      const filePath = `/uploads/${fileName}`;
+      const savePath = path.join(process.cwd(), "public", "uploads", fileName);
+
+      await writeFile(savePath, buffer);
+
+      await prisma.plantPhoto.create({
+        data: {
+          plantId: currentPlantId,
+          noteId: newNote.id,
+          fileName: photo.name,
+          filePath,
+        },
+      });
+    }
 
     revalidatePath(`/plants/${currentPlantId}`);
     redirect(`/plants/${currentPlantId}`);
@@ -179,6 +202,12 @@ export default async function PlantDetailPage({
           </label>
 
           <textarea id="content" name="content" rows={4} required />
+        </div>
+
+        <div className="form-row">
+          <label htmlFor="photo">Photo</label>
+
+          <input id="photo" name="photo" type="file" accept="image/*" />
         </div>
 
         <div className="form-actions">
