@@ -30,6 +30,12 @@ export default async function PlantDetailPage({
       area: true,
       category: true,
       status: true,
+      photos: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 1,
+      },
       notes: {
         orderBy: {
           noteDate: "desc",
@@ -54,6 +60,7 @@ export default async function PlantDetailPage({
   }
 
   const currentPlantId = plant.id;
+  const coverPhoto = plant.photos[0];
 
   async function createNote(formData: FormData) {
     "use server";
@@ -146,6 +153,15 @@ export default async function PlantDetailPage({
   return (
     <main className="edit-page">
       <h1>{plant.plantName}</h1>
+
+      {coverPhoto && (
+        <div className="plant-cover-photo">
+          <img
+            src={coverPhoto.filePath}
+            alt={coverPhoto.caption || coverPhoto.fileName}
+          />
+        </div>
+      )}
 
       <div className="page-actions">
         <Link className="link-button secondary" href="/">
