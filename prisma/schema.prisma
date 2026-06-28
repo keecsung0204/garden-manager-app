@@ -110,6 +110,7 @@ model PlantPhoto {
   fileName  String
   filePath  String
   caption   String?
+  isCover  Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

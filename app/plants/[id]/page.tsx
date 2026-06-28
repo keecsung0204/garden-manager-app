@@ -31,9 +31,14 @@ export default async function PlantDetailPage({
       category: true,
       status: true,
       photos: {
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: [
+          {
+            isCover: "desc",
+          },
+          {
+            createdAt: "desc",
+          },
+        ],
         take: 1,
       },
       notes: {
@@ -131,6 +136,43 @@ export default async function PlantDetailPage({
     } catch {
       // 파일이 이미 없어도 DB 삭제는 성공으로 처리합니다.
     }
+
+    revalidatePath(`/plants/${currentPlantId}`);
+    redirect(`/plants/${currentPlantId}`);
+  }
+
+  async function setCoverPhoto(formData: FormData) {
+    "use server";
+
+    const photoId = Number(formData.get("photoId"));
+
+    const photo = await prisma.plantPhoto.findUnique({
+      where: {
+        id: photoId,
+      },
+    });
+
+    if (!photo) {
+      return;
+    }
+
+    await prisma.plantPhoto.updateMany({
+      where: {
+        plantId: photo.plantId,
+      },
+      data: {
+        isCover: false,
+      },
+    });
+
+    await prisma.plantPhoto.update({
+      where: {
+        id: photoId,
+      },
+      data: {
+        isCover: true,
+      },
+    });
 
     revalidatePath(`/plants/${currentPlantId}`);
     redirect(`/plants/${currentPlantId}`);
@@ -305,7 +347,7 @@ export default async function PlantDetailPage({
                   {note.photos.length > 0 && (
                     <div className="note-photos">
                       {note.photos.map((photo) => (
-                        <div key={photo.id}>
+                        <div key={photo.id} className="note-photo-item">
                           <a href={`#photo-${photo.id}`} className="note-photo-link">
                             <img
                               className="note-photo"
@@ -329,12 +371,25 @@ export default async function PlantDetailPage({
                             </div>
                           </div>
 
-                          <form action={deletePhoto} className="photo-delete-form">
-                            <input type="hidden" name="photoId" value={photo.id} />
-                            <button type="submit" className="photo-delete-button">
-                              Delete Photo
-                            </button>
-                          </form>
+                          <div className="photo-actions-row">
+                            {photo.isCover ? (
+                              <div className="photo-cover-label">Cover</div>
+                            ) : (
+                              <form action={setCoverPhoto} className="photo-cover-form">
+                                <input type="hidden" name="photoId" value={photo.id} />
+                                <button type="submit" className="photo-cover-button">
+                                  Set
+                                </button>
+                              </form>
+                            )}
+
+                            <form action={deletePhoto} className="photo-delete-form">
+                              <input type="hidden" name="photoId" value={photo.id} />
+                              <button type="submit" className="photo-delete-button">
+                                Delete 
+                              </button>
+                            </form>
+                          </div>
                         </div>
                       ))}
                     </div>

@@ -438,8 +438,84 @@ button:disabled {
   flex-wrap: wrap;
   flex-shrink: 0;
 }
+
+.note-photo-item {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .note-photo-link {
-  display: inline-block;
+  display: block;
+}
+
+.note-photo {
+  display: block;
+  width: 110px;
+  height: 82px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #d7e2d0;
+}
+
+.note-content {
+  flex: 1;
+  margin: 0;
+}
+
+.photo-actions-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 150px;
+  margin-top: 6px;
+}
+
+.photo-actions-row form,
+.photo-cover-form,
+.photo-delete-form {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+}
+
+.photo-cover-button,
+.photo-delete-button {
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: underline;
+  white-space: nowrap;
+  padding: 0;
+}
+
+.photo-cover-button {
+  color: #2f6f3e;
+}
+
+.photo-cover-button:hover {
+  color: #1f4d2b;
+}
+
+.photo-delete-button {
+  color: #b42318;
+}
+
+.photo-delete-button:hover {
+  color: #7a271a;
+}
+
+.photo-cover-label {
+  color: #2f6f3e;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  margin: 0;
 }
 
 .photo-lightbox {
@@ -495,35 +571,6 @@ button:disabled {
   border: 1px solid #ccc;
 }
 
-.note-photo {
-  width: 110px;
-  height: 82px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #d7e2d0;
-}
-
-.note-content {
-  flex: 1;
-  margin: 0;
-}
-.photo-delete-form {
-  margin-top: 6px;
-  text-align: center;
-}
-
-.photo-delete-button {
-  border: none;
-  background: transparent;
-  color: #b42318;
-  font-size: 12px;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.photo-delete-button:hover {
-  color: #7a271a;
-}
 .plant-cover-photo {
   margin: 12px 0 18px;
   max-width: 420px;
@@ -535,4 +582,69 @@ button:disabled {
   object-fit: cover;
   border-radius: 12px;
   border: 1px solid #d7e2d0;
+}
+
+.note-photo-item .photo-cover-button,
+.note-photo-item .photo-delete-button {
+  width: auto;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 11px;
+  line-height: 1.2;
+  cursor: pointer;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.note-photo-item .photo-cover-button {
+  color: #2f6f3e;
+}
+
+.note-photo-item .photo-delete-button {
+  color: #b42318;
+}
+
+.note-photo-item .photo-cover-button:hover,
+.note-photo-item .photo-delete-button:hover {
+  width: auto;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-decoration: underline;
+}
+
+.note-photo-item .photo-cover-button:hover {
+  color: #1f4d2b;
+}
+
+.note-photo-item .photo-delete-button:hover {
+  color: #7a271a;
+}
+
+.note-photo-item .photo-actions-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 110px;
+  margin-top: 6px;
+}
+
+.note-photo-item .photo-actions-row form {
+  width: auto;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
 }
