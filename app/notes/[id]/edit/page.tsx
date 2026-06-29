@@ -3,6 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
+import { writeFile } from "fs/promises";
+import path from "path";
 
 export default async function EditNotePage({
     params,
@@ -49,6 +51,7 @@ export default async function EditNotePage({
 
         const noteTypeId = formData.get("noteTypeId") as string;
         const content = formData.get("content") as string;
+        const photo = formData.get("photo") as File | null;
 
         await prisma.plantNote.update({
             where: {
@@ -59,7 +62,33 @@ export default async function EditNotePage({
                 content,
             },
         });
+        if (photo && photo.size > 0) {
+            const bytes = await photo.arrayBuffer();
+            const buffer = Buffer.from(bytes);
 
+            const fileName = `${Date.now()}-${photo.name}`;
+            const filePath = `/uploads/${fileName}`;
+            const savePath = path.join(process.cwd(), "public", "uploads", fileName);
+
+            await writeFile(savePath, buffer);
+
+            const existingCoverPhoto = await prisma.plantPhoto.findFirst({
+                where: {
+                    plantId,
+                    isCover: true,
+                },
+            });
+
+            await prisma.plantPhoto.create({
+                data: {
+                    plantId,
+                    noteId,
+                    fileName: photo.name,
+                    filePath,
+                    isCover: !existingCoverPhoto,
+                },
+            });
+        }
         revalidatePath(`/plants/${plantId}`);
         redirect(`/plants/${plantId}`);
     }
@@ -108,6 +137,11 @@ export default async function EditNotePage({
                         />
                     </div>
 
+                    <div className="form-row">
+                        <label htmlFor="photo">Add Photo</label>
+
+                        <input id="photo" name="photo" type="file" accept="image/*" />
+                    </div>
                     <div className="form-actions">
                         <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
                     </div>
