@@ -37,7 +37,7 @@ export default function AreaFilter({
 
   return (
     <select name="areaId" value={selectedAreaId} onChange={handleChange}>
-      <option value="">All Area</option>
+      <option value="">All</option>
       {areas.map((area) => (
         <option key={area.id} value={area.id}>
           {area.areaCode} - {area.name}

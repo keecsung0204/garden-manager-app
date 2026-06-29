@@ -36,7 +36,7 @@ export default function StatusFilter({
 
     return (
         <select name="statusId" value={selectedStatusId} onChange={handleChange}>
-            <option value="">All Status</option>
+            <option value="">All</option>
             {statuses.map((status) => (
                 <option key={status.id} value={status.id}>
                     {status.name}

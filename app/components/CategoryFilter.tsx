@@ -41,7 +41,7 @@ export default function CategoryFilter({
       value={selectedCategoryId}
       onChange={handleChange}
     >
-      <option value="">All Category</option>
+      <option value="">All</option>
       {categories.map((category) => (
         <option key={category.id} value={category.id}>
           {category.categoryCode} - {category.name}
