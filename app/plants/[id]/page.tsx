@@ -6,6 +6,7 @@ import SubmitButton from "@/app/components/SubmitButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 import { writeFile, unlink } from "fs/promises";
 import path from "path";
+import NotePhotoViewer from "@/app/components/NotePhotoViewer";
 
 export default async function PlantDetailPage({
   params,
@@ -356,28 +357,10 @@ export default async function PlantDetailPage({
                     <div className="note-photos">
                       {note.photos.map((photo) => (
                         <div key={photo.id} className="note-photo-item">
-                          <a href={`#photo-${photo.id}`} className="note-photo-link">
-                            <img
-                              className="note-photo"
-                              src={photo.filePath}
-                              alt={photo.caption || photo.fileName}
-                            />
-                          </a>
-
-                          <div id={`photo-${photo.id}`} className="photo-lightbox">
-                            <a className="photo-lightbox-backdrop" href="#"></a>
-
-                            <div className="photo-lightbox-content">
-                              <a className="photo-lightbox-close" href="#">
-                                ×
-                              </a>
-
-                              <img
-                                src={photo.filePath}
-                                alt={photo.caption || photo.fileName}
-                              />
-                            </div>
-                          </div>
+                          <NotePhotoViewer
+                            filePath={photo.filePath}
+                            altText={photo.caption || photo.fileName}
+                          />
 
                           <div className="photo-actions-row">
                             {photo.isCover ? (
