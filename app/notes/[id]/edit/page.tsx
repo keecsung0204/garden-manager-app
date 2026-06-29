@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
 import { writeFile } from "fs/promises";
+import PhotoInputPreview from "@/app/components/PhotoInputPreview";
 import path from "path";
 
 export default async function EditNotePage({
@@ -20,6 +21,11 @@ export default async function EditNotePage({
         include: {
             plant: true,
             noteTypeRef: true,
+            photos: {
+                orderBy: {
+                    createdAt: "desc",
+                },
+            },
         },
     });
 
@@ -136,17 +142,28 @@ export default async function EditNotePage({
                             defaultValue={note.content}
                         />
                     </div>
+                    {note.photos.length > 0 && (
+                        <div className="form-row existing-photos-row">
+                            <label>Existing Photos</label>
 
-                    <div className="form-row">
-                        <label htmlFor="photo">Add Photo</label>
-
-                        <input id="photo" name="photo" type="file" accept="image/*" />
-                    </div>
+                            <div className="note-photos">
+                                {note.photos.map((photo) => (
+                                    <img
+                                        key={photo.id}
+                                        className="note-photo"
+                                        src={photo.filePath}
+                                        alt={photo.caption || photo.fileName}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    <PhotoInputPreview />
                     <div className="form-actions">
                         <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
                     </div>
                 </form>
             </section>
-        </main>
+        </main >
     );
 }
