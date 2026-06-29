@@ -94,12 +94,20 @@ export default async function PlantDetailPage({
 
       await writeFile(savePath, buffer);
 
+      const existingCoverPhoto = await prisma.plantPhoto.findFirst({
+        where: {
+          plantId: currentPlantId,
+          isCover: true,
+        },
+      });
+
       await prisma.plantPhoto.create({
         data: {
           plantId: currentPlantId,
           noteId: newNote.id,
           fileName: photo.name,
           filePath,
+          isCover: !existingCoverPhoto,
         },
       });
     }
@@ -386,7 +394,7 @@ export default async function PlantDetailPage({
                             <form action={deletePhoto} className="photo-delete-form">
                               <input type="hidden" name="photoId" value={photo.id} />
                               <button type="submit" className="photo-delete-button">
-                                Delete 
+                                Delete
                               </button>
                             </form>
                           </div>
