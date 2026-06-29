@@ -51,6 +51,13 @@ export default async function Home({
       area: true,
       category: true,
       status: true,
+      photos: {
+        orderBy: [
+          { isCover: "desc" },
+          { createdAt: "desc" },
+        ],
+        take: 1,
+      },
     },
     orderBy: {
       plantCode: "asc",
@@ -76,6 +83,7 @@ export default async function Home({
         <table className="plant-table">
           <thead>
             <tr>
+              <th>Photo</th>
               <th>Plant Code</th>
               <th>Plant Name</th>
               <th>Area</th>
@@ -86,6 +94,7 @@ export default async function Home({
             </tr>
 
             <tr>
+              <th></th>
               <th></th>
               <th></th>
               <th>
@@ -113,11 +122,24 @@ export default async function Home({
           <tbody>
             {plants.length === 0 ? (
               <tr>
-                <td colSpan={7}>해당 조건의 Plant가 없습니다.</td>
+                <td colSpan={8}>해당 조건의 Plant가 없습니다.</td>
               </tr>
             ) : (
               plants.map((plant) => (
                 <tr key={plant.id}>
+                  <td>
+                    {plant.photos[0] ? (
+                      <Link href={`/plants/${plant.id}`}>
+                        <img
+                          className="home-plant-photo"
+                          src={plant.photos[0].filePath}
+                          alt={plant.plantName}
+                        />
+                      </Link>
+                    ) : (
+                      <span className="home-no-photo">-</span>
+                    )}
+                  </td>
                   <td>{plant.plantCode}</td>
                   <td>
                     <Link className="plant-name-link" href={`/plants/${plant.id}`}>

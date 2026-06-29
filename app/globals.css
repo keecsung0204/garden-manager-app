@@ -648,3 +648,15 @@ button:disabled {
   padding: 0;
   display: inline-flex;
 }
+.home-plant-photo {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  display: block;
+}
+
+.home-no-photo {
+  color: #aaa;
+}
