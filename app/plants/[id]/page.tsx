@@ -4,10 +4,12 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
+import ConfirmPhotoDeleteButton from "@/app/components/ConfirmPhotoDeleteButton";
 import { writeFile, unlink } from "fs/promises";
 import path from "path";
 import NotePhotoViewer from "@/app/components/NotePhotoViewer";
 import PhotoInputPreview from "@/app/components/PhotoInputPreview";
+
 
 export default async function PlantDetailPage({
   params,
@@ -377,9 +379,7 @@ export default async function PlantDetailPage({
                             <div className="photo-action-right">
                               <form action={deletePhoto} className="photo-delete-form">
                                 <input type="hidden" name="photoId" value={photo.id} />
-                                <button type="submit" className="photo-delete-button">
-                                  Delete
-                                </button>
+                                <ConfirmPhotoDeleteButton />
                               </form>
                             </div>
                           </div>
