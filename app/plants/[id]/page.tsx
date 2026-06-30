@@ -7,6 +7,7 @@ import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 import { writeFile, unlink } from "fs/promises";
 import path from "path";
 import NotePhotoViewer from "@/app/components/NotePhotoViewer";
+import PhotoInputPreview from "@/app/components/PhotoInputPreview";
 
 export default async function PlantDetailPage({
   params,
@@ -305,11 +306,7 @@ export default async function PlantDetailPage({
           <textarea id="content" name="content" rows={4} required />
         </div>
 
-        <div className="form-row">
-          <label htmlFor="photo">Photo</label>
-
-          <input id="photo" name="photo" type="file" accept="image/*" />
-        </div>
+        <PhotoInputPreview />
 
         <div className="form-actions">
           <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
@@ -353,6 +350,7 @@ export default async function PlantDetailPage({
                 </div>
 
                 <div className="note-body">
+                  <p className="note-content">{note.content}</p>
                   {note.photos.length > 0 && (
                     <div className="note-photos">
                       {note.photos.map((photo) => (
@@ -363,30 +361,33 @@ export default async function PlantDetailPage({
                           />
 
                           <div className="photo-actions-row">
-                            {photo.isCover ? (
-                              <div className="photo-cover-label">Cover</div>
-                            ) : (
-                              <form action={setCoverPhoto} className="photo-cover-form">
+                            <div className="photo-action-left">
+                              {photo.isCover ? (
+                                <div className="photo-cover-label">Cover</div>
+                              ) : (
+                                <form action={setCoverPhoto} className="photo-cover-form">
+                                  <input type="hidden" name="photoId" value={photo.id} />
+                                  <button type="submit" className="photo-cover-button">
+                                    Set
+                                  </button>
+                                </form>
+                              )}
+                            </div>
+
+                            <div className="photo-action-right">
+                              <form action={deletePhoto} className="photo-delete-form">
                                 <input type="hidden" name="photoId" value={photo.id} />
-                                <button type="submit" className="photo-cover-button">
-                                  Set
+                                <button type="submit" className="photo-delete-button">
+                                  Delete
                                 </button>
                               </form>
-                            )}
-
-                            <form action={deletePhoto} className="photo-delete-form">
-                              <input type="hidden" name="photoId" value={photo.id} />
-                              <button type="submit" className="photo-delete-button">
-                                Delete
-                              </button>
-                            </form>
+                            </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  <p className="note-content">{note.content}</p>
                 </div>
               </div>
             ))}
