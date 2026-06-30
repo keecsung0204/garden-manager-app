@@ -78,6 +78,7 @@ export default async function PlantDetailPage({
     const content = formData.get("content") as string;
     const noteDate = formData.get("noteDate") as string;
     const photo = formData.get("photo") as File | null;
+    const photoCaption = formData.get("photoCaption") as string;
 
     const newNote = await prisma.plantNote.create({
       data: {
@@ -111,6 +112,7 @@ export default async function PlantDetailPage({
           noteId: newNote.id,
           fileName: photo.name,
           filePath,
+          caption: photoCaption?.trim() || null,
           isCover: !existingCoverPhoto,
         },
       });
@@ -309,6 +311,15 @@ export default async function PlantDetailPage({
         </div>
 
         <PhotoInputPreview />
+        <div className="form-row">
+          <label htmlFor="photoCaption">Photo Caption</label>
+          <input
+            id="photoCaption"
+            name="photoCaption"
+            type="text"
+            placeholder="예: 6월 말 새순 상태"
+          />
+        </div>
 
         <div className="form-actions">
           <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
@@ -383,6 +394,9 @@ export default async function PlantDetailPage({
                               </form>
                             </div>
                           </div>
+                          {photo.caption && (
+                            <div className="photo-caption">{photo.caption}</div>
+                          )}
                         </div>
                       ))}
                     </div>
