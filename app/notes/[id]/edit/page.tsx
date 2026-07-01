@@ -58,6 +58,7 @@ export default async function EditNotePage({
         const noteTypeId = formData.get("noteTypeId") as string;
         const content = formData.get("content") as string;
         const photo = formData.get("photo") as File | null;
+        const newPhotoCaption = formData.get("newPhotoCaption") as string;
 
         await prisma.plantNote.update({
             where: {
@@ -68,6 +69,26 @@ export default async function EditNotePage({
                 content,
             },
         });
+        const photos = await prisma.plantPhoto.findMany({
+            where: {
+                noteId,
+            },
+        });
+
+        await Promise.all(
+            photos.map((photo) =>
+                prisma.plantPhoto.update({
+                    where: {
+                        id: photo.id,
+                    },
+                    data: {
+                        caption:
+                            (formData.get(`photoCaption-${photo.id}`) as string)?.trim() ||
+                            null,
+                    },
+                })
+            )
+        );
         if (photo && photo.size > 0) {
             const bytes = await photo.arrayBuffer();
             const buffer = Buffer.from(bytes);
@@ -91,7 +112,7 @@ export default async function EditNotePage({
                     noteId,
                     fileName: photo.name,
                     filePath,
-                    isCover: !existingCoverPhoto,
+                    caption: newPhotoCaption?.trim() || null,
                 },
             });
         }
@@ -148,17 +169,44 @@ export default async function EditNotePage({
 
                             <div className="note-photos">
                                 {note.photos.map((photo) => (
-                                    <img
-                                        key={photo.id}
-                                        className="note-photo"
-                                        src={photo.filePath}
-                                        alt={photo.caption || photo.fileName}
-                                    />
+                                    <div key={photo.id} className="note-photo-item">
+                                        <img
+                                            className="note-photo"
+                                            src={photo.filePath}
+                                            alt={photo.caption || photo.fileName}
+                                        />
+
+                                        <label
+                                            className="photo-caption-edit-label"
+                                            htmlFor={`photoCaption-${photo.id}`}
+                                        >
+                                            Caption
+                                        </label>
+
+                                        <input
+                                            id={`photoCaption-${photo.id}`}
+                                            name={`photoCaption-${photo.id}`}
+                                            type="text"
+                                            defaultValue={photo.caption || ""}
+                                            className="photo-caption-input"
+                                            placeholder="사진 설명"
+                                        />
+                                    </div>
                                 ))}
                             </div>
                         </div>
                     )}
                     <PhotoInputPreview />
+
+                    <div className="form-row">
+                        <label htmlFor="newPhotoCaption">Photo Caption</label>
+                        <input
+                            id="newPhotoCaption"
+                            name="newPhotoCaption"
+                            type="text"
+                            placeholder="예: 6월 말 새순 상태"
+                        />
+                    </div>
                     <div className="form-actions">
                         <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
                     </div>
