@@ -1,0 +1,108 @@
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+  main {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .detail-card {
+    padding: 16px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    max-width: none;
+    font-size: 16px;
+  }
+
+  button,
+  .link-button {
+    min-height: 42px;
+  }
+
+  .page-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .page-actions .link-button {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .detail-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 0;
+  }
+
+  .detail-label {
+    font-size: 13px;
+  }
+
+  .note-card {
+    padding: 12px;
+  }
+
+  .note-card .note-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .note-card .note-header-actions {
+    justify-content: flex-start;
+  }
+
+  .note-card .note-header-actions .link-button,
+  .note-card .note-header-actions .delete-button {
+    width: 88px;
+  }
+
+  .note-photos {
+    gap: 10px;
+  }
+
+  .add-note-form select,
+  .add-note-form textarea {
+    max-width: none;
+  }
+
+  .selected-photo-preview img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .plant-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .plant-table th,
+  .plant-table td {
+    padding: 8px 6px;
+  }
+}
