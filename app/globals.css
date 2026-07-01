@@ -464,10 +464,6 @@ button:disabled {
   flex-shrink: 0;
 }
 
-.note-photo-link {
-  display: block;
-}
-
 .note-photo {
   display: block;
   width: 110px;
@@ -494,7 +490,20 @@ button:disabled {
 .photo-lightbox-backdrop {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
+  padding: 0;
+  margin: 0;
   background: rgba(0, 0, 0, 0.65);
+  appearance: none;
+  cursor: pointer;
+}
+
+.photo-lightbox-backdrop:hover {
+  background: rgba(0, 0, 0, 0.65);
+  box-shadow: none;
 }
 
 .photo-lightbox-content {
@@ -520,15 +529,23 @@ button:disabled {
   right: -12px;
   width: 28px;
   height: 28px;
+  border: none;
   border-radius: 999px;
   background: white;
   color: #333;
-  text-decoration: none;
-  text-align: center;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
   line-height: 28px;
-  font-size: 22px;
-  font-weight: bold;
-  border: 1px solid #ccc;
+  font-size: 20px;
+  box-shadow: none;
+  appearance: none;
+}
+
+.photo-lightbox-close:hover {
+  background: white;
+  color: #333;
+  box-shadow: none;
 }
 
 .plant-cover-photo {
@@ -711,81 +728,7 @@ button:disabled {
   background: transparent;
   box-shadow: none;
 }
-.photo-lightbox-backdrop {
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-}
 
-.photo-lightbox-backdrop:hover {
-  background: rgba(0, 0, 0, 0.65);
-  box-shadow: none;
-}
-
-.photo-lightbox-close {
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  line-height: 28px;
-  font-size: 20px;
-}
-
-.photo-lightbox-close:hover {
-  background: white;
-  color: #333;
-  box-shadow: none;
-}
-.photo-lightbox {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.photo-lightbox-backdrop {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  border: none;
-  padding: 0;
-  margin: 0;
-  background: rgba(0, 0, 0, 0.65);
-  box-shadow: none;
-  appearance: none;
-  cursor: pointer;
-}
-
-.photo-lightbox-backdrop:hover {
-  background: rgba(0, 0, 0, 0.65);
-  box-shadow: none;
-}
-
-.photo-lightbox-content {
-  position: relative;
-  z-index: 1001;
-}
-
-.photo-lightbox-close {
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  line-height: 28px;
-  font-size: 20px;
-  box-shadow: none;
-  appearance: none;
-}
-
-.photo-lightbox-close:hover {
-  background: white;
-  color: #333;
-  box-shadow: none;
-}
 .note-photo-item .photo-caption {
   width: 110px;
   margin-top: 4px;
