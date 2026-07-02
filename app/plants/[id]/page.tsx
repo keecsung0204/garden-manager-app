@@ -401,7 +401,11 @@ export default async function PlantDetailPage({
                       ))}
                     </div>
                   )}
-
+                  {note.photos.length > 0 && (
+                    <Link className="ai-check-link" href={`/notes/${note.id}/ai-check`}>
+                      AI 문의자료 보기
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
