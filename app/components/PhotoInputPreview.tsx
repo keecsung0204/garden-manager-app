@@ -34,6 +34,7 @@ export default function PhotoInputPreview() {
         name="photo"
         type="file"
         accept="image/*"
+        capture="environment"
         onChange={handlePhotoChange}
       />
 
