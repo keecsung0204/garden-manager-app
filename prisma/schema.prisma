@@ -13,6 +13,7 @@ model Area {
   name      String
 
   plants    Plant[]
+  irrigationZones IrrigationZone[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,6 +48,7 @@ model Plant {
 
   notes           PlantNote[]
   photos          PlantPhoto[]
+  irrigations     PlantIrrigation[]
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -116,6 +118,45 @@ model PlantPhoto {
   updatedAt DateTime @updatedAt
 }
 
+model IrrigationZone {
+  id              Int      @id @default(autoincrement())
+
+  zoneCode        String   @unique
+  name            String
+
+  areaId          Int?
+  area            Area?    @relation(fields: [areaId], references: [id])
+
+  method          String
+  frequencyDays   Int?
+  runMinutes      Int?
+
+  notes           String?
+
+  plantIrrigations PlantIrrigation[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PlantIrrigation {
+  id                Int      @id @default(autoincrement())
+
+  plantId           Int
+  plant             Plant    @relation(fields: [plantId], references: [id])
+
+  irrigationZoneId  Int?
+  irrigationZone    IrrigationZone? @relation(fields: [irrigationZoneId], references: [id])
+
+  emitterGph        Float?
+  emitterCount      Int?
+
+  runMinutesOverride Int?
+  notes             String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
 enum IdentifyStatus {
   Unknown
   Tentative
