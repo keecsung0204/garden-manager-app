@@ -8,155 +8,159 @@ datasource db {
 }
 
 model Area {
-  id        Int     @id @default(autoincrement())
-  areaCode  String  @unique
-  name      String
+  id       Int    @id @default(autoincrement())
+  areaCode String @unique
+  name     String
 
-  plants    Plant[]
-  irrigationZones IrrigationZone[]
+  plants           Plant[]
+  irrigationZoneId Int?
+  irrigationZone   IrrigationZone? @relation(fields: [irrigationZoneId], references: [id])
+  irrigationMethod String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model PlantCategory {
-  id           Int     @id @default(autoincrement())
-  categoryCode String  @unique
+  id           Int    @id @default(autoincrement())
+  categoryCode String @unique
   name         String
 
-  plants       Plant[]
+  plants Plant[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Plant {
-  id              Int     @id @default(autoincrement())
-  plantCode       String  @unique
+  id        Int    @id @default(autoincrement())
+  plantCode String @unique
 
-  areaId          Int?
-  area            Area?   @relation(fields: [areaId], references: [id])
+  areaId Int?
+  area   Area? @relation(fields: [areaId], references: [id])
 
-  categoryId      Int?
-  category        PlantCategory? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+  category   PlantCategory? @relation(fields: [categoryId], references: [id])
 
-  plantName       String
-  scientificName  String?
-  identifyStatus  IdentifyStatus @default(Unknown)
-  statusId        Int?
-  status          PlantStatus? @relation(fields: [statusId], references: [id])
+  plantName      String
+  scientificName String?
+  identifyStatus IdentifyStatus @default(Unknown)
+  statusId       Int?
+  status         PlantStatus?   @relation(fields: [statusId], references: [id])
 
-  notes           PlantNote[]
-  photos          PlantPhoto[]
-  irrigations     PlantIrrigation[]
+  notes       PlantNote[]
+  photos      PlantPhoto[]
+  irrigations PlantIrrigation[]
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PlantNote {
-  id        Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  plantId   Int
-  plant     Plant    @relation(fields: [plantId], references: [id])
+  plantId Int
+  plant   Plant @relation(fields: [plantId], references: [id])
 
-  noteDate  DateTime @default(now())
-  noteType  String?
+  noteDate DateTime @default(now())
+  noteType String?
 
-  noteTypeId Int?
+  noteTypeId  Int?
   noteTypeRef NoteType? @relation(fields: [noteTypeId], references: [id])
 
-  content   String
-  photos    PlantPhoto[]
+  content String
+  photos  PlantPhoto[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model NoteType {
-  id           Int      @id @default(autoincrement())
-  typeCode     String   @unique
+  id           Int     @id @default(autoincrement())
+  typeCode     String  @unique
   name         String
   description  String?
-  displayOrder Int      @default(0)
-  isActive     Boolean  @default(true)
+  displayOrder Int     @default(0)
+  isActive     Boolean @default(true)
 
-  notes        PlantNote[]
+  notes PlantNote[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PlantStatus {
-  id           Int      @id @default(autoincrement())
-  statusCode   String   @unique
+  id           Int     @id @default(autoincrement())
+  statusCode   String  @unique
   name         String
   description  String?
-  displayOrder Int      @default(0)
+  displayOrder Int     @default(0)
 
-  plants       Plant[]
+  plants Plant[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PlantPhoto {
-  id        Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  plantId   Int
-  plant     Plant    @relation(fields: [plantId], references: [id])
+  plantId Int
+  plant   Plant @relation(fields: [plantId], references: [id])
 
-  noteId    Int
-  note      PlantNote @relation(fields: [noteId], references: [id])
+  noteId Int
+  note   PlantNote @relation(fields: [noteId], references: [id])
 
-  fileName  String
-  filePath  String
-  caption   String?
-  isCover  Boolean  @default(false)
+  fileName String
+  filePath String
+  caption  String?
+  isCover  Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model IrrigationZone {
-  id              Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  zoneCode        String   @unique
-  name            String
+  zoneCode       String  @unique
+  name           String
+  externalSystem String?
+  externalZoneNo Int?
+  externalId     String?
 
-  areaId          Int?
-  area            Area?    @relation(fields: [areaId], references: [id])
+  areas Area[]
 
-  method          String
-  frequencyDays   Int?
-  runMinutes      Int?
+  frequencyDays Int?
+  runMinutes    Int?
 
-  notes           String?
+  notes String?
 
   plantIrrigations PlantIrrigation[]
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PlantIrrigation {
-  id                Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  plantId           Int
-  plant             Plant    @relation(fields: [plantId], references: [id])
+  plantId Int
+  plant   Plant @relation(fields: [plantId], references: [id])
 
-  irrigationZoneId  Int?
-  irrigationZone    IrrigationZone? @relation(fields: [irrigationZoneId], references: [id])
+  irrigationZoneId Int?
+  irrigationZone   IrrigationZone? @relation(fields: [irrigationZoneId], references: [id])
 
-  emitterGph        Float?
-  emitterCount      Int?
+  emitterGph   Float?
+  emitterCount Int?
 
   runMinutesOverride Int?
-  notes             String?
+  notes              String?
 
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 enum IdentifyStatus {
   Unknown
   Tentative
