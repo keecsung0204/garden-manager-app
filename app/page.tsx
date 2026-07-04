@@ -72,6 +72,10 @@ export default async function Home({
           Add New Plant
         </Link>
 
+        <Link href="/irrigation-zones" className="link-button secondary">
+          Irrigation Zones
+        </Link>
+
         <Link href="/" className="link-button secondary">
           Clear Filters
         </Link>
