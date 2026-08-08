@@ -5,8 +5,11 @@ import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 import ConfirmPhotoDeleteButton from "@/app/components/ConfirmPhotoDeleteButton";
-import { writeFile, unlink } from "fs/promises";
-import path from "path";
+import {
+  uploadGardenPhoto,
+  deleteGardenPhoto,
+  getGardenPhotoUrl,
+} from "@/lib/photoStorage";
 import NotePhotoViewer from "@/app/components/NotePhotoViewer";
 import PhotoInputPreview from "@/app/components/PhotoInputPreview";
 
@@ -70,6 +73,21 @@ export default async function PlantDetailPage({
 
   const currentPlantId = plant.id;
   const coverPhoto = plant.photos[0];
+  const coverPhotoUrl = coverPhoto
+    ? await getGardenPhotoUrl(coverPhoto.filePath)
+    : null;
+
+  const notesWithPhotoUrls = await Promise.all(
+    plant.notes.map(async (note) => ({
+      ...note,
+      photos: await Promise.all(
+        note.photos.map(async (photo) => ({
+          ...photo,
+          displayUrl: await getGardenPhotoUrl(photo.filePath),
+        }))
+      ),
+    }))
+  );
 
   async function createNote(formData: FormData) {
     "use server";
@@ -90,14 +108,11 @@ export default async function PlantDetailPage({
     });
 
     if (photo && photo.size > 0) {
-      const bytes = await photo.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      const fileName = `${Date.now()}-${photo.name}`;
-      const filePath = `/uploads/${fileName}`;
-      const savePath = path.join(process.cwd(), "public", "uploads", fileName);
-
-      await writeFile(savePath, buffer);
+      const uploadedPhoto = await uploadGardenPhoto({
+        file: photo,
+        plantId: currentPlantId,
+        noteId: newNote.id,
+      });
 
       const existingCoverPhoto = await prisma.plantPhoto.findFirst({
         where: {
@@ -110,8 +125,8 @@ export default async function PlantDetailPage({
         data: {
           plantId: currentPlantId,
           noteId: newNote.id,
-          fileName: photo.name,
-          filePath,
+          fileName: uploadedPhoto.fileName,
+          filePath: uploadedPhoto.filePath,
           caption: photoCaption?.trim() || null,
           isCover: !existingCoverPhoto,
         },
@@ -142,11 +157,8 @@ export default async function PlantDetailPage({
       },
     });
 
-    const relativePath = photo.filePath.replace(/^\/+/, "");
-    const fullPath = path.join(process.cwd(), "public", relativePath);
-
     try {
-      await unlink(fullPath);
+      await deleteGardenPhoto(photo.filePath);
     } catch {
       // 파일이 이미 없어도 DB 삭제는 성공으로 처리합니다.
     }
@@ -213,7 +225,7 @@ export default async function PlantDetailPage({
       {coverPhoto && (
         <div className="plant-cover-photo">
           <img
-            src={coverPhoto.filePath}
+            src={coverPhotoUrl || coverPhoto.filePath}
             alt={coverPhoto.caption || coverPhoto.fileName}
           />
         </div>
@@ -329,11 +341,11 @@ export default async function PlantDetailPage({
       <section className="detail-card">
         <h2>Recent Notes</h2>
 
-        {plant.notes.length === 0 ? (
+        {notesWithPhotoUrls.length === 0 ? (
           <p>아직 기록이 없습니다.</p>
         ) : (
           <div className="note-list">
-            {plant.notes.map((note) => (
+            {notesWithPhotoUrls.map((note) => (
               <div className="note-card" key={note.id}>
                 <div className="note-header">
                   <span className="note-type">
@@ -369,7 +381,7 @@ export default async function PlantDetailPage({
                       {note.photos.map((photo) => (
                         <div key={photo.id} className="note-photo-item">
                           <NotePhotoViewer
-                            filePath={photo.filePath}
+                            filePath={photo.displayUrl}
                             altText={photo.caption || photo.fileName}
                           />
 
