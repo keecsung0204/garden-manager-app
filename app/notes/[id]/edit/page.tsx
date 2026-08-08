@@ -99,12 +99,6 @@ export default async function EditNotePage({
 
             await writeFile(savePath, buffer);
 
-            const existingCoverPhoto = await prisma.plantPhoto.findFirst({
-                where: {
-                    plantId,
-                    isCover: true,
-                },
-            });
 
             await prisma.plantPhoto.create({
                 data: {

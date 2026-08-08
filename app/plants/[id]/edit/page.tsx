@@ -69,7 +69,7 @@ export default async function EditPlantPage({
     });
 
     revalidatePath("/");
-    revalidatePath(`/plants/${plant.id}/edit`);
+    revalidatePath(`/plants/${currentPlantId}/edit`);
 
     redirect(`/plants/${currentPlantId}`);
   }
