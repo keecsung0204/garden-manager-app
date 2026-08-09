@@ -3,9 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
-import { writeFile } from "fs/promises";
 import PhotoInputPreview from "@/app/components/PhotoInputPreview";
-import path from "path";
+import { uploadGardenPhoto, getGardenPhotoUrl } from "@/lib/photoStorage";
 
 export default async function EditNotePage({
     params,
@@ -51,6 +50,12 @@ export default async function EditNotePage({
     }
 
     const plantId = note.plantId;
+    const photoDisplayItems = await Promise.all(
+        note.photos.map(async (photo) => ({
+            ...photo,
+            displayUrl: await getGardenPhotoUrl(photo.filePath),
+        }))
+    );
 
     async function updateNote(formData: FormData) {
         "use server";
@@ -90,22 +95,17 @@ export default async function EditNotePage({
             )
         );
         if (photo && photo.size > 0) {
-            const bytes = await photo.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-
-            const fileName = `${Date.now()}-${photo.name}`;
-            const filePath = `/uploads/${fileName}`;
-            const savePath = path.join(process.cwd(), "public", "uploads", fileName);
-
-            await writeFile(savePath, buffer);
-
-
+            const uploadedPhoto = await uploadGardenPhoto({
+                file: photo,
+                plantId,
+                noteId,
+            });
             await prisma.plantPhoto.create({
                 data: {
                     plantId,
                     noteId,
-                    fileName: photo.name,
-                    filePath,
+                    fileName: uploadedPhoto.fileName,
+                    filePath: uploadedPhoto.filePath,
                     caption: newPhotoCaption?.trim() || null,
                 },
             });
@@ -157,16 +157,16 @@ export default async function EditNotePage({
                             defaultValue={note.content}
                         />
                     </div>
-                    {note.photos.length > 0 && (
+                    {photoDisplayItems.length > 0 && (
                         <div className="form-row existing-photos-row">
                             <label>Existing Photos</label>
 
                             <div className="note-photos">
-                                {note.photos.map((photo) => (
+                                {photoDisplayItems.map((photo) => (
                                     <div key={photo.id} className="note-photo-item">
                                         <img
                                             className="note-photo"
-                                            src={photo.filePath}
+                                            src={photo.displayUrl}
                                             alt={photo.caption || photo.fileName}
                                         />
 
