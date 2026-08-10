@@ -3,6 +3,7 @@ import Link from "next/link";
 import StatusFilter from "@/app/components/StatusFilter";
 import AreaFilter from "@/app/components/AreaFilter";
 import CategoryFilter from "@/app/components/CategoryFilter";
+import { getGardenPhotoUrl } from "@/lib/photoStorage";
 
 export default async function Home({
   searchParams,
@@ -63,6 +64,14 @@ export default async function Home({
       plantCode: "asc",
     },
   });
+  const plantsWithPhotoUrls = await Promise.all(
+    plants.map(async (plant) => ({
+      ...plant,
+      coverPhotoUrl: plant.photos[0]
+        ? await getGardenPhotoUrl(plant.photos[0].filePath)
+        : null,
+    }))
+  );
 
   return (
     <main style={{ padding: "20px", maxWidth: "900px" }}>
@@ -82,7 +91,7 @@ export default async function Home({
       </div>
 
       <section className="detail-card">
-        <h2>Plants ({plants.length})</h2>
+        <h2>Plants ({plantsWithPhotoUrls.length})</h2>
 
         <table className="plant-table">
           <thead>
@@ -124,19 +133,19 @@ export default async function Home({
             </tr>
           </thead>
           <tbody>
-            {plants.length === 0 ? (
+            {plantsWithPhotoUrls.length === 0 ? (
               <tr>
                 <td colSpan={8}>해당 조건의 Plant가 없습니다.</td>
               </tr>
             ) : (
-              plants.map((plant) => (
+              plantsWithPhotoUrls.map((plant) => (
                 <tr key={plant.id}>
                   <td>
                     {plant.photos[0] ? (
                       <Link href={`/plants/${plant.id}`}>
                         <img
                           className="home-plant-photo"
-                          src={plant.photos[0].filePath}
+                          src={plant.coverPhotoUrl || plant.photos[0].filePath}
                           alt={plant.plantName}
                         />
                       </Link>
