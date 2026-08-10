@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import CopyButton from "@/app/components/CopyButton";
+import { getGardenPhotoUrl } from "@/lib/photoStorage";
 
 export default async function AiCheckPage({
     params,
@@ -41,6 +42,13 @@ export default async function AiCheckPage({
             </main>
         );
     }
+
+    const photosWithUrls = await Promise.all(
+    note.photos.map(async (photo) => ({
+        ...photo,
+        displayUrl: await getGardenPhotoUrl(photo.filePath),
+    }))
+);
 
     const questionText = `이 식물의 이름과 상태를 추정해 주세요.
 
@@ -130,16 +138,16 @@ ${note.photos
                 <p className="note-content">{note.content}</p>
             </section>
 
-            {note.photos.length > 0 && (
+            {photosWithUrls.length > 0 && (
                 <section className="detail-card ai-check-card">
                     <h2>사진</h2>
 
                     <div className="note-photos">
-                        {note.photos.map((photo) => (
+                        {photosWithUrls.map((photo) => (
                             <div key={photo.id} className="note-photo-item">
                                 <img
                                     className="note-photo"
-                                    src={photo.filePath}
+                                    src={photo.displayUrl}
                                     alt={photo.caption || photo.fileName}
                                 />
 
