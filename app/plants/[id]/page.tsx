@@ -13,12 +13,14 @@ import {
 import NotePhotoViewer from "@/app/components/NotePhotoViewer";
 import PhotoInputPreview from "@/app/components/PhotoInputPreview";
 
-
 export default async function PlantDetailPage({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams?: { addNote?: string };
 }) {
+  const showAddNote = searchParams?.addNote === "1";
   const plantId = Number(params.id);
   const noteTypes = await prisma.noteType.findMany({
     where: {
@@ -231,16 +233,22 @@ export default async function PlantDetailPage({
         </div>
       )}
 
-      <div className="page-actions">
+      <div className="page-actions plant-page-actions">
         <Link className="link-button secondary" href="/">
-          ← Back to Home
+          Home
         </Link>
 
         <Link className="link-button" href={`/plants/${plant.id}/edit`}>
-          Edit Plant
+          Edit
+        </Link>
+
+        <Link
+          className="link-button"
+          href={`/plants/${plant.id}?addNote=1`}
+        >
+          Add Note
         </Link>
       </div>
-
       <section className="detail-card">
         <h2>Plant Detail</h2>
 
@@ -280,64 +288,72 @@ export default async function PlantDetailPage({
           <span>{plant.scientificName || "-"}</span>
         </div>
       </section>
+      {showAddNote && (
+        <form
+          key={plant.notes.length}
+          className="detail-card add-note-form"
+          action={createNote}
+        >
+          <h2>Add Note</h2>
 
-      <form
-        key={plant.notes.length}
-        className="detail-card add-note-form"
-        action={createNote}
-      >
-        <h2>Add Note</h2>
+          <div className="form-row">
+            <label htmlFor="noteDate">Note Date</label>
 
-        <div className="form-row">
-          <label htmlFor="noteDate">Note Date</label>
+            <input
+              id="noteDate"
+              name="noteDate"
+              type="datetime-local"
+            />
+          </div>
 
-          <input
-            id="noteDate"
-            name="noteDate"
-            type="datetime-local"
-          />
-        </div>
+          <div className="form-row">
+            <label htmlFor="noteTypeId">
+              Note Type
+            </label>
 
-        <div className="form-row">
-          <label htmlFor="noteTypeId">
-            Note Type
-          </label>
+            <select id="noteTypeId" name="noteTypeId" defaultValue="">
+              <option value="">Note Type 선택</option>
 
-          <select id="noteTypeId" name="noteTypeId" defaultValue="">
-            <option value="">Note Type 선택</option>
+              {noteTypes.map((noteType) => (
+                <option key={noteType.id} value={noteType.id}>
+                  {noteType.name} - {noteType.description}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            {noteTypes.map((noteType) => (
-              <option key={noteType.id} value={noteType.id}>
-                {noteType.name} - {noteType.description}
-              </option>
-            ))}
-          </select>
-        </div>
+          <div className="form-row">
+            <label htmlFor="content">
+              Content
+            </label>
 
-        <div className="form-row">
-          <label htmlFor="content">
-            Content
-          </label>
+            <textarea id="content" name="content" rows={4} required />
+          </div>
 
-          <textarea id="content" name="content" rows={4} required />
-        </div>
+          <PhotoInputPreview />
+          <div className="form-row">
+            <label htmlFor="photoCaption">Photo Caption</label>
+            <input
+              id="photoCaption"
+              name="photoCaption"
+              type="text"
+              placeholder="예: 6월 말 새순 상태"
+            />
+          </div>
 
-        <PhotoInputPreview />
-        <div className="form-row">
-          <label htmlFor="photoCaption">Photo Caption</label>
-          <input
-            id="photoCaption"
-            name="photoCaption"
-            type="text"
-            placeholder="예: 6월 말 새순 상태"
-          />
-        </div>
-
-        <div className="form-actions">
-          <SubmitButton pendingText="Saving Note...">Save Note</SubmitButton>
-        </div>
-      </form>
-
+          <div className="form-actions">
+            <SubmitButton pendingText="Saving Note...">
+              Save Note
+            </SubmitButton>
+            <Link
+              className="link-button secondary"
+              href={`/plants/${plant.id}`}
+            >
+              Cancel
+            </Link>
+          </div>
+        </form>
+      )}
       <section className="detail-card">
         <h2>Recent Notes</h2>
 

@@ -831,3 +831,13 @@ button:disabled {
   color: #9a2f2f;
   font-weight: 600;
 }
+.plant-page-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.plant-page-actions .link-button {
+  text-align: center;
+  justify-content: center;
+}
