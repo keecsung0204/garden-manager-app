@@ -41,8 +41,20 @@ async function createPlant(formData: FormData) {
 export default async function NewPlantPage() {
 
     const { areas, categories, statuses } = await getPlantFormOptions();
-    const plantCount = await prisma.plant.count();
-    const nextPlantCode = `P${String(plantCount + 1).padStart(3, "0")}`;
+    const lastPlant = await prisma.plant.findFirst({
+        orderBy: {
+            plantCode: "desc",
+        },
+        select: {
+            plantCode: true,
+        },
+    });
+
+    const lastNumber = lastPlant
+        ? Number(lastPlant.plantCode.replace(/\D/g, ""))
+        : 0;
+
+    const nextPlantCode = `P${String(lastNumber + 1).padStart(3, "0")}`;
 
     return (
         <main className="edit-page">
