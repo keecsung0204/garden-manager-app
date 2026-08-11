@@ -85,6 +85,10 @@ export default async function Home({
           Irrigation Zones
         </Link>
 
+        <Link href="/admin/master-data" className="link-button secondary">
+          Manage Data
+        </Link>
+
         <Link href="/" className="link-button secondary">
           Clear Filters
         </Link>
