@@ -47,12 +47,110 @@ async function updateArea(formData: FormData) {
   redirect("/admin/master-data");
 }
 
+async function addCategory(formData: FormData) {
+  "use server";
+
+  const categoryCode = String(formData.get("categoryCode") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+
+  if (!categoryCode || !name) {
+    return;
+  }
+
+  await prisma.plantCategory.create({
+    data: {
+      categoryCode,
+      name,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data");
+}
+
+async function updateCategory(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+  const categoryCode = String(formData.get("categoryCode") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+
+  if (!id || !categoryCode || !name) {
+    return;
+  }
+
+  await prisma.plantCategory.update({
+    where: { id },
+    data: {
+      categoryCode,
+      name,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data");
+}
+
+async function addPlantStatus(formData: FormData) {
+  "use server";
+
+  const statusCode = String(formData.get("statusCode") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const displayOrder = Number(formData.get("displayOrder") || 0);
+
+  if (!statusCode || !name) {
+    return;
+  }
+
+  await prisma.plantStatus.create({
+    data: {
+      statusCode,
+      name,
+      description: description || null,
+      displayOrder,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data");
+}
+
+async function updatePlantStatus(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+  const statusCode = String(formData.get("statusCode") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const displayOrder = Number(formData.get("displayOrder") || 0);
+
+  if (!id || !statusCode || !name) {
+    return;
+  }
+
+  await prisma.plantStatus.update({
+    where: { id },
+    data: {
+      statusCode,
+      name,
+      description: description || null,
+      displayOrder,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data");
+}
+
 export default async function MasterDataPage({
   searchParams,
 }: {
-  searchParams?: {
-    editArea?: string;
-  };
+searchParams?: {
+  editArea?: string;
+  editCategory?: string;
+  editStatus?: string;
+};
 }) {
   const [areas, categories, statuses] = await Promise.all([
     prisma.area.findMany({
@@ -66,9 +164,20 @@ export default async function MasterDataPage({
     }),
   ]);
 
-  const editAreaId = Number(searchParams?.editArea || 0);
-  const editingArea = editAreaId
+    const editAreaId = Number(searchParams?.editArea || 0);
+
+    const editingArea = editAreaId
     ? areas.find((area) => area.id === editAreaId)
+    : null;
+
+    const editCategoryId = Number(searchParams?.editCategory || 0);
+    const editingCategory = editCategoryId
+    ? categories.find((category) => category.id === editCategoryId)
+    : null;
+
+    const editStatusId = Number(searchParams?.editStatus || 0);
+    const editingStatus = editStatusId
+    ? statuses.find((status) => status.id === editStatusId)
     : null;
 
   return (
@@ -165,27 +274,147 @@ export default async function MasterDataPage({
       <section className="detail-card">
         <h2>Categories</h2>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Name</th>
-            </tr>
-          </thead>
+        <form
+            action={editingCategory ? updateCategory : addCategory}
+            className="master-data-form"
+        >
+            {editingCategory && (
+            <input type="hidden" name="id" value={editingCategory.id} />
+            )}
 
-          <tbody>
+            <div className="form-row">
+            <label htmlFor="categoryCode">Category Code</label>
+            <input
+                id="categoryCode"
+                name="categoryCode"
+                type="text"
+                required
+                defaultValue={editingCategory?.categoryCode || ""}
+            />
+            </div>
+
+            <div className="form-row">
+            <label htmlFor="categoryName">Category Name</label>
+            <input
+                id="categoryName"
+                name="name"
+                type="text"
+                required
+                defaultValue={editingCategory?.name || ""}
+            />
+            </div>
+
+            <div className="form-actions">
+            <button type="submit" className="link-button">
+                {editingCategory ? "Save Category" : "Add Category"}
+            </button>
+
+            {editingCategory && (
+                <Link
+                href="/admin/master-data"
+                className="link-button secondary"
+                >
+                Cancel
+                </Link>
+            )}
+            </div>
+        </form>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
             {categories.map((category) => (
-              <tr key={category.id}>
+                <tr key={category.id}>
                 <td>{category.categoryCode}</td>
                 <td>{category.name}</td>
-              </tr>
+                <td>
+                    <Link
+                    href={`/admin/master-data?editCategory=${category.id}`}
+                    className="link-button secondary"
+                    >
+                    Edit
+                    </Link>
+                </td>
+                </tr>
             ))}
-          </tbody>
+            </tbody>
         </table>
-      </section>
-
-      <section className="detail-card">
+      </section> 
+            <section className="detail-card">
         <h2>Plant Status</h2>
+
+        <form
+          action={editingStatus ? updatePlantStatus : addPlantStatus}
+          className="master-data-form"
+        >
+          {editingStatus && (
+            <input type="hidden" name="id" value={editingStatus.id} />
+          )}
+
+          <div className="form-row">
+            <label htmlFor="statusCode">Status Code</label>
+            <input
+              id="statusCode"
+              name="statusCode"
+              type="text"
+              required
+              defaultValue={editingStatus?.statusCode || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="statusName">Status Name</label>
+            <input
+              id="statusName"
+              name="name"
+              type="text"
+              required
+              defaultValue={editingStatus?.name || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="statusDescription">Description</label>
+            <input
+              id="statusDescription"
+              name="description"
+              type="text"
+              defaultValue={editingStatus?.description || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="displayOrder">Display Order</label>
+            <input
+              id="displayOrder"
+              name="displayOrder"
+              type="number"
+              defaultValue={editingStatus?.displayOrder ?? 0}
+            />
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="link-button">
+              {editingStatus ? "Save Status" : "Add Status"}
+            </button>
+
+            {editingStatus && (
+              <Link
+                href="/admin/master-data"
+                className="link-button secondary"
+              >
+                Cancel
+              </Link>
+            )}
+          </div>
+        </form>
 
         <table>
           <thead>
@@ -193,6 +422,8 @@ export default async function MasterDataPage({
               <th>Code</th>
               <th>Name</th>
               <th>Description</th>
+              <th>Order</th>
+              <th>Action</th>
             </tr>
           </thead>
 
@@ -202,11 +433,20 @@ export default async function MasterDataPage({
                 <td>{status.statusCode}</td>
                 <td>{status.name}</td>
                 <td>{status.description || "-"}</td>
+                <td>{status.displayOrder}</td>
+                <td>
+                  <Link
+                    href={`/admin/master-data?editStatus=${status.id}`}
+                    className="link-button secondary"
+                  >
+                    Edit
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </section>
+      </section> 
     </main>
   );
 }
