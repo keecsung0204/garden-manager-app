@@ -80,11 +80,6 @@ export default async function Home({
         <Link href="/plants/new" className="link-button">
           Add New Plant
         </Link>
-
-        <Link href="/irrigation-zones" className="link-button secondary">
-          Irrigation Zones
-        </Link>
-
         <Link href="/admin/master-data" className="link-button secondary">
           Manage Data
         </Link>

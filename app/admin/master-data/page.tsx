@@ -22,6 +22,10 @@ export default async function MasterDataPage() {
         <Link href="/" className="link-button secondary">
           ← Back to Home
         </Link>
+
+        <Link href="/irrigation-zones" className="link-button">
+            Irrigation Zones
+        </Link>
       </div>
 
       <section className="detail-card">
