@@ -4,6 +4,7 @@ import StatusFilter from "@/app/components/StatusFilter";
 import AreaFilter from "@/app/components/AreaFilter";
 import CategoryFilter from "@/app/components/CategoryFilter";
 import { getGardenPhotoUrl } from "@/lib/photoStorage";
+export const dynamic = "force-dynamic";
 
 export default async function Home({
   searchParams,

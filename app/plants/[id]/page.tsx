@@ -12,6 +12,7 @@ import {
 } from "@/lib/photoStorage";
 import NotePhotoViewer from "@/app/components/NotePhotoViewer";
 import PhotoInputPreview from "@/app/components/PhotoInputPreview";
+export const dynamic = "force-dynamic";
 
 export default async function PlantDetailPage({
   params,
