@@ -143,6 +143,80 @@ async function updatePlantStatus(formData: FormData) {
   redirect("/admin/master-data");
 }
 
+async function addNoteType(formData: FormData) {
+  "use server";
+
+  const typeCode = String(formData.get("typeCode") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const displayOrder = Number(formData.get("displayOrder") || 0);
+
+  if (!typeCode || !name) {
+    return;
+  }
+
+  await prisma.noteType.create({
+    data: {
+      typeCode,
+      name,
+      description: description || null,
+      displayOrder,
+      isActive: true,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data");
+}
+
+async function updateNoteType(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+  const typeCode = String(formData.get("typeCode") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const displayOrder = Number(formData.get("displayOrder") || 0);
+
+  if (!id || !typeCode || !name) {
+    return;
+  }
+
+  await prisma.noteType.update({
+    where: { id },
+    data: {
+      typeCode,
+      name,
+      description: description || null,
+      displayOrder,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data");
+}
+
+async function toggleNoteType(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+  const isActive = String(formData.get("isActive")) === "true";
+
+  if (!id) {
+    return;
+  }
+
+  await prisma.noteType.update({
+    where: { id },
+    data: {
+      isActive: !isActive,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data");
+}
+
 export default async function MasterDataPage({
   searchParams,
 }: {
@@ -150,9 +224,10 @@ searchParams?: {
   editArea?: string;
   editCategory?: string;
   editStatus?: string;
+  editNoteType?: string;
 };
 }) {
-  const [areas, categories, statuses] = await Promise.all([
+  const [areas, categories, statuses, noteTypes] = await Promise.all([
     prisma.area.findMany({
       orderBy: { areaCode: "asc" },
     }),
@@ -160,6 +235,9 @@ searchParams?: {
       orderBy: { categoryCode: "asc" },
     }),
     prisma.plantStatus.findMany({
+      orderBy: { displayOrder: "asc" },
+    }),
+    prisma.noteType.findMany({
       orderBy: { displayOrder: "asc" },
     }),
   ]);
@@ -179,7 +257,11 @@ searchParams?: {
     const editingStatus = editStatusId
     ? statuses.find((status) => status.id === editStatusId)
     : null;
+    const editNoteTypeId = Number(searchParams?.editNoteType || 0);
 
+    const editingNoteType = editNoteTypeId
+    ? noteTypes.find((noteType) => noteType.id === editNoteTypeId)
+    : null;
   return (
     <main style={{ padding: "20px", maxWidth: "900px" }}>
       <h1>Manage Data</h1>
@@ -447,6 +529,123 @@ searchParams?: {
           </tbody>
         </table>
       </section> 
+      <section className="detail-card">
+        <h2>Note Types</h2>
+
+        <form
+          action={editingNoteType ? updateNoteType : addNoteType}
+          className="master-data-form"
+        >
+          {editingNoteType && (
+            <input type="hidden" name="id" value={editingNoteType.id} />
+          )}
+
+          <div className="form-row">
+            <label htmlFor="noteTypeCode">Type Code</label>
+            <input
+              id="noteTypeCode"
+              name="typeCode"
+              type="text"
+              required
+              defaultValue={editingNoteType?.typeCode || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="noteTypeName">Type Name</label>
+            <input
+              id="noteTypeName"
+              name="name"
+              type="text"
+              required
+              defaultValue={editingNoteType?.name || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="noteTypeDescription">Description</label>
+            <input
+              id="noteTypeDescription"
+              name="description"
+              type="text"
+              defaultValue={editingNoteType?.description || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="noteTypeDisplayOrder">Display Order</label>
+            <input
+              id="noteTypeDisplayOrder"
+              name="displayOrder"
+              type="number"
+              defaultValue={editingNoteType?.displayOrder ?? 0}
+            />
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="link-button">
+              {editingNoteType ? "Save Note Type" : "Add Note Type"}
+            </button>
+
+            {editingNoteType && (
+              <Link
+                href="/admin/master-data"
+                className="link-button secondary"
+              >
+                Cancel
+              </Link>
+            )}
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Order</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {noteTypes.map((noteType) => (
+              <tr key={noteType.id}>
+                <td>{noteType.typeCode}</td>
+                <td>{noteType.name}</td>
+                <td>{noteType.description || "-"}</td>
+                <td>{noteType.displayOrder}</td>
+                <td>{noteType.isActive ? "Active" : "Inactive"}</td>
+                <td>
+                  <div className="form-actions">
+                    <Link
+                      href={`/admin/master-data?editNoteType=${noteType.id}`}
+                      className="link-button secondary"
+                    >
+                      Edit
+                    </Link>
+
+                    <form action={toggleNoteType}>
+                      <input type="hidden" name="id" value={noteType.id} />
+                      <input
+                        type="hidden"
+                        name="isActive"
+                        value={String(noteType.isActive)}
+                      />
+
+                      <button type="submit" className="link-button secondary">
+                        {noteType.isActive ? "Deactivate" : "Activate"}
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
     </main>
   );
 }
