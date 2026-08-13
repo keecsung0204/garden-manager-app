@@ -24,6 +24,7 @@ type PlantFormValues = {
     identifyStatus?: "Unknown" | "Tentative" | "Confirmed";
     statusId?: number | null;
     scientificName?: string | null;
+    speciesId?: number | null;
 };
 
 type PlantFormProps = {
@@ -33,6 +34,14 @@ type PlantFormProps = {
     statuses: PlantStatus[];
     defaultValues?: PlantFormValues;
     submitLabel?: string;
+    species: PlantSpecies[];
+};
+
+type PlantSpecies = {
+    id: number;
+    commonName: string;
+    scientificName: string;
+    cultivar: string | null;
 };
 
 export default function PlantForm({
@@ -40,6 +49,7 @@ export default function PlantForm({
     areas,
     categories,
     statuses,
+    species,
     defaultValues,
     submitLabel = "Save Plant",
 }: PlantFormProps) {
@@ -99,6 +109,24 @@ export default function PlantForm({
                 </select>
             </div>
 
+            <div className="form-row">
+                <label htmlFor="speciesId">Species</label>
+                <select
+                    id="speciesId"
+                    name="speciesId"
+                    defaultValue={defaultValues?.speciesId?.toString() || ""}
+                >
+                    <option value="">Species 선택</option>
+
+                    {species.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.commonName} - {item.scientificName}
+                            {item.cultivar ? ` (${item.cultivar})` : ""}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            
             <div className="form-row">
                 <label htmlFor="identifyStatus">Identify Status</label>
                 <select

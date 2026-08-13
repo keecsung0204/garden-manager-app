@@ -42,6 +42,9 @@ model Plant {
   categoryId Int?
   category   PlantCategory? @relation(fields: [categoryId], references: [id])
 
+  speciesId Int?
+  species   PlantSpecies? @relation(fields: [speciesId], references: [id])
+
   plantName      String
   scientificName String?
   identifyStatus IdentifyStatus @default(Unknown)
@@ -51,6 +54,19 @@ model Plant {
   notes       PlantNote[]
   photos      PlantPhoto[]
   irrigations PlantIrrigation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PlantSpecies {
+  id             Int      @id @default(autoincrement())
+  commonName     String
+  scientificName String
+  cultivar       String?
+  description    String?
+
+  plants Plant[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

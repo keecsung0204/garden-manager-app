@@ -7,7 +7,7 @@ import { getPlantFormOptions } from "@/lib/getPlantFormOptions";
 
 async function createPlant(formData: FormData) {
     "use server";
-
+    const speciesId = formData.get("speciesId")?.toString();
     const plantCode = formData.get("plantCode")?.toString().trim();
     const plantName = formData.get("plantName")?.toString().trim();
     const areaId = formData.get("areaId")?.toString();
@@ -31,6 +31,7 @@ async function createPlant(formData: FormData) {
                 | "Tentative"
                 | "Confirmed",
             statusId: statusId ? Number(statusId) : null,
+            speciesId: speciesId ? Number(speciesId) : null,
             scientificName: scientificName || null,
         },
     });
@@ -40,7 +41,7 @@ async function createPlant(formData: FormData) {
 
 export default async function NewPlantPage() {
 
-    const { areas, categories, statuses } = await getPlantFormOptions();
+    const { areas, categories, statuses, species  } = await getPlantFormOptions();
     const lastPlant = await prisma.plant.findFirst({
         orderBy: {
             plantCode: "desc",
@@ -71,6 +72,7 @@ export default async function NewPlantPage() {
                     areas={areas}
                     categories={categories}
                     statuses={statuses}
+                    species={species}
                     defaultValues={{
                         plantCode: nextPlantCode,
                         identifyStatus: "Unknown",

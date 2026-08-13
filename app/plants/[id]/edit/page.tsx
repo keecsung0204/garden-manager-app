@@ -11,7 +11,7 @@ export default async function EditPlantPage({
   params: { id: string };
 }) {
   const plantId = Number(params.id);
-  const { areas, categories, statuses } = await getPlantFormOptions();
+  const { areas, categories, statuses, species  } = await getPlantFormOptions();
 
   const plant = await prisma.plant.findUnique({
     where: {
@@ -47,6 +47,7 @@ export default async function EditPlantPage({
     const areaId = formData.get("areaId") as string;
     const categoryId = formData.get("categoryId") as string;
     const statusId = formData.get("statusId") as string;
+    const speciesId = formData.get("speciesId") as string;
     const identifyStatus = formData.get("identifyStatus") as
       | "Unknown"
       | "Tentative"
@@ -63,6 +64,7 @@ export default async function EditPlantPage({
         areaId: areaId ? Number(areaId) : null,
         categoryId: categoryId ? Number(categoryId) : null,
         statusId: statusId ? Number(statusId) : null,
+        speciesId: speciesId ? Number(speciesId) : null,
         identifyStatus,
         scientificName: scientificName || null,
       },
@@ -83,6 +85,7 @@ export default async function EditPlantPage({
         areas={areas}
         categories={categories}
         statuses={statuses}
+        species={species}
         defaultValues={{
           plantCode: plant.plantCode,
           plantName: plant.plantName,
@@ -90,6 +93,7 @@ export default async function EditPlantPage({
           categoryId: plant.categoryId,
           identifyStatus: plant.identifyStatus,
           statusId: plant.statusId,
+          speciesId: plant.speciesId,
           scientificName: plant.scientificName,
         }}
         submitLabel="Save Plant"

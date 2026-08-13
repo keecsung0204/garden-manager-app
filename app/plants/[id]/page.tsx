@@ -40,6 +40,7 @@ export default async function PlantDetailPage({
       area: true,
       category: true,
       status: true,
+      species: true,
       photos: {
         orderBy: [
           {
@@ -285,8 +286,20 @@ export default async function PlantDetailPage({
         </div>
 
         <div className="detail-row">
+          <span className="detail-label">Species</span>
+          <span>{plant.species?.commonName || "-"}</span>
+        </div>
+
+        <div className="detail-row">
           <span className="detail-label">Scientific Name</span>
-          <span>{plant.scientificName || "-"}</span>
+          <span>
+            {plant.species?.scientificName || plant.scientificName || "-"}
+          </span>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Cultivar</span>
+          <span>{plant.species?.cultivar || "-"}</span>
         </div>
       </section>
       {showAddNote && (

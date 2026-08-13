@@ -217,6 +217,58 @@ async function toggleNoteType(formData: FormData) {
   redirect("/admin/master-data#note-types");
 }
 
+async function addSpecies(formData: FormData) {
+  "use server";
+
+  const commonName = String(formData.get("commonName") || "").trim();
+  const scientificName = String(formData.get("scientificName") || "").trim();
+  const cultivar = String(formData.get("cultivar") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+
+  if (!commonName || !scientificName) {
+    return;
+  }
+
+  await prisma.plantSpecies.create({
+    data: {
+      commonName,
+      scientificName,
+      cultivar: cultivar || null,
+      description: description || null,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data#species");
+}
+
+async function updateSpecies(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+  const commonName = String(formData.get("commonName") || "").trim();
+  const scientificName = String(formData.get("scientificName") || "").trim();
+  const cultivar = String(formData.get("cultivar") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+
+  if (!id || !commonName || !scientificName) {
+    return;
+  }
+
+  await prisma.plantSpecies.update({
+    where: { id },
+    data: {
+      commonName,
+      scientificName,
+      cultivar: cultivar || null,
+      description: description || null,
+    },
+  });
+
+  revalidatePath("/admin/master-data");
+  redirect("/admin/master-data#species");
+}
+
 export default async function MasterDataPage({
   searchParams,
 }: {
@@ -225,9 +277,10 @@ searchParams?: {
   editCategory?: string;
   editStatus?: string;
   editNoteType?: string;
+  editSpecies?: string;
 };
 }) {
-  const [areas, categories, statuses, noteTypes] = await Promise.all([
+  const [areas, categories, statuses, noteTypes, speciesList] = await Promise.all([
     prisma.area.findMany({
       orderBy: { areaCode: "asc" },
     }),
@@ -240,6 +293,12 @@ searchParams?: {
     prisma.noteType.findMany({
       orderBy: { displayOrder: "asc" },
     }),
+    prisma.plantSpecies.findMany({
+      orderBy: [
+        { commonName: "asc" },
+        { scientificName: "asc" },
+      ],
+}),
   ]);
 
     const editAreaId = Number(searchParams?.editArea || 0);
@@ -262,6 +321,13 @@ searchParams?: {
     const editingNoteType = editNoteTypeId
     ? noteTypes.find((noteType) => noteType.id === editNoteTypeId)
     : null;
+
+    const editSpeciesId = Number(searchParams?.editSpecies || 0);
+
+    const editingSpecies = editSpeciesId
+    ? speciesList.find((species) => species.id === editSpeciesId)
+    : null;
+
   return (
     <main style={{ padding: "20px", maxWidth: "900px" }}>
       <h1>Manage Data</h1>
@@ -287,6 +353,10 @@ searchParams?: {
 
         <a href="#note-types" className="link-button secondary">
           Note Types
+        </a>
+
+        <a href="#species" className="link-button secondary">
+          Species
         </a>
 
         <Link href="/irrigation-zones" className="link-button secondary">
@@ -659,7 +729,107 @@ searchParams?: {
             ))}
           </tbody>
         </table>
+            </section>
+
+      <section id="species" className="detail-card">
+        <h2>Species</h2>
+
+        <form
+          action={editingSpecies ? updateSpecies : addSpecies}
+          className="master-data-form"
+        >
+          {editingSpecies && (
+            <input type="hidden" name="id" value={editingSpecies.id} />
+          )}
+
+          <div className="form-row">
+            <label htmlFor="speciesCommonName">Common Name</label>
+            <input
+              id="speciesCommonName"
+              name="commonName"
+              type="text"
+              required
+              defaultValue={editingSpecies?.commonName || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="speciesScientificName">Scientific Name</label>
+            <input
+              id="speciesScientificName"
+              name="scientificName"
+              type="text"
+              required
+              defaultValue={editingSpecies?.scientificName || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="speciesCultivar">Cultivar</label>
+            <input
+              id="speciesCultivar"
+              name="cultivar"
+              type="text"
+              defaultValue={editingSpecies?.cultivar || ""}
+            />
+          </div>
+
+          <div className="form-row">
+            <label htmlFor="speciesDescription">Description</label>
+            <input
+              id="speciesDescription"
+              name="description"
+              type="text"
+              defaultValue={editingSpecies?.description || ""}
+            />
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="link-button">
+              {editingSpecies ? "Save Species" : "Add Species"}
+            </button>
+
+            {editingSpecies && (
+              <Link
+                href="/admin/master-data#species"
+                className="link-button secondary"
+              >
+                Cancel
+              </Link>
+            )}
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Common Name</th>
+              <th>Scientific Name</th>
+              <th>Cultivar</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {speciesList.map((species) => (
+              <tr key={species.id}>
+                <td>{species.commonName}</td>
+                <td>{species.scientificName}</td>
+                <td>{species.cultivar || "-"}</td>
+                <td>
+                  <Link
+                    href={`/admin/master-data?editSpecies=${species.id}#species`}
+                    className="link-button secondary"
+                  >
+                    Edit
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
+
     </main>
   );
 }

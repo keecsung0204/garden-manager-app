@@ -19,9 +19,17 @@ export async function getPlantFormOptions() {
     },
   });
 
+  const species = await prisma.plantSpecies.findMany({
+    orderBy: [
+      { commonName: "asc" },
+      { scientificName: "asc" },
+    ],
+  });
+
   return {
     areas,
     categories,
     statuses,
+    species,
   };
 }
