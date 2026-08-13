@@ -245,7 +245,7 @@ export default async function PlantDetailPage({
 
         <Link
           className="link-button"
-          href={`/plants/${plant.id}?addNote=1`}
+          href={`/plants/${plant.id}?addNote=1#add-note-form`}
         >
           Add Note
         </Link>
@@ -291,6 +291,7 @@ export default async function PlantDetailPage({
       </section>
       {showAddNote && (
         <form
+          id="add-note-form"
           key={plant.notes.length}
           className="detail-card add-note-form"
           action={createNote}
