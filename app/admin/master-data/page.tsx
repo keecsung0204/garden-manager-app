@@ -21,7 +21,7 @@ async function addArea(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#areas");
 }
 
 async function updateArea(formData: FormData) {
@@ -44,7 +44,7 @@ async function updateArea(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#areas");
 }
 
 async function addCategory(formData: FormData) {
@@ -65,7 +65,7 @@ async function addCategory(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#categories");
 }
 
 async function updateCategory(formData: FormData) {
@@ -88,7 +88,7 @@ async function updateCategory(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#categories");
 }
 
 async function addPlantStatus(formData: FormData) {
@@ -113,7 +113,7 @@ async function addPlantStatus(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#plant-status");
 }
 
 async function updatePlantStatus(formData: FormData) {
@@ -140,7 +140,7 @@ async function updatePlantStatus(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#plant-status");
 }
 
 async function addNoteType(formData: FormData) {
@@ -166,7 +166,7 @@ async function addNoteType(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#note-types");
 }
 
 async function updateNoteType(formData: FormData) {
@@ -193,7 +193,7 @@ async function updateNoteType(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#note-types");
 }
 
 async function toggleNoteType(formData: FormData) {
@@ -214,7 +214,7 @@ async function toggleNoteType(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data");
+  redirect("/admin/master-data#note-types");
 }
 
 export default async function MasterDataPage({
@@ -270,14 +270,31 @@ searchParams?: {
         <Link href="/" className="link-button secondary">
           ← Back to Home
         </Link>
-
-        <Link href="/irrigation-zones" className="link-button">
-          Irrigation Zones
-        </Link>
       </div>
 
-      <section className="detail-card">
-        <h2>Areas</h2>
+      <div className="page-actions">
+        <a href="#areas" className="link-button secondary">
+          Areas
+        </a>
+
+        <a href="#categories" className="link-button secondary">
+          Categories
+        </a>
+
+        <a href="#plant-status" className="link-button secondary">
+          Plant Status
+        </a>
+
+        <a href="#note-types" className="link-button secondary">
+          Note Types
+        </a>
+
+        <Link href="/irrigation-zones" className="link-button secondary">
+          Irrigation Zones
+        </Link>
+      </div> 
+
+      <section id="areas" className="detail-card">
 
         <form
           action={editingArea ? updateArea : addArea}
@@ -316,7 +333,7 @@ searchParams?: {
 
             {editingArea && (
               <Link
-                href="/admin/master-data"
+                href="/admin/master-data#areas"
                 className="link-button secondary"
               >
                 Cancel
@@ -341,7 +358,7 @@ searchParams?: {
                 <td>{area.name}</td>
                 <td>
                   <Link
-                    href={`/admin/master-data?editArea=${area.id}`}
+                    href={`/admin/master-data?editArea=${area.id}#areas`}
                     className="link-button secondary"
                   >
                     Edit
@@ -353,8 +370,7 @@ searchParams?: {
         </table>
       </section>
 
-      <section className="detail-card">
-        <h2>Categories</h2>
+      <section id="categories" className="detail-card">
 
         <form
             action={editingCategory ? updateCategory : addCategory}
@@ -393,7 +409,7 @@ searchParams?: {
 
             {editingCategory && (
                 <Link
-                href="/admin/master-data"
+                href="/admin/master-data#categories"
                 className="link-button secondary"
                 >
                 Cancel
@@ -418,7 +434,7 @@ searchParams?: {
                 <td>{category.name}</td>
                 <td>
                     <Link
-                    href={`/admin/master-data?editCategory=${category.id}`}
+                    href={`/admin/master-data?editCategory=${category.id}#categories`}
                     className="link-button secondary"
                     >
                     Edit
@@ -429,8 +445,7 @@ searchParams?: {
             </tbody>
         </table>
       </section> 
-            <section className="detail-card">
-        <h2>Plant Status</h2>
+      <section id="plant-status" className="detail-card">
 
         <form
           action={editingStatus ? updatePlantStatus : addPlantStatus}
@@ -489,7 +504,7 @@ searchParams?: {
 
             {editingStatus && (
               <Link
-                href="/admin/master-data"
+                href="/admin/master-data#plant-status"
                 className="link-button secondary"
               >
                 Cancel
@@ -518,7 +533,7 @@ searchParams?: {
                 <td>{status.displayOrder}</td>
                 <td>
                   <Link
-                    href={`/admin/master-data?editStatus=${status.id}`}
+                    href={`/admin/master-data?editStatus=${status.id}#plant-status`}
                     className="link-button secondary"
                   >
                     Edit
@@ -529,8 +544,7 @@ searchParams?: {
           </tbody>
         </table>
       </section> 
-      <section className="detail-card">
-        <h2>Note Types</h2>
+      <section id="note-types" className="detail-card">
 
         <form
           action={editingNoteType ? updateNoteType : addNoteType}
@@ -589,7 +603,7 @@ searchParams?: {
 
             {editingNoteType && (
               <Link
-                href="/admin/master-data"
+                href="/admin/master-data#note-types"
                 className="link-button secondary"
               >
                 Cancel
@@ -621,7 +635,7 @@ searchParams?: {
                 <td>
                   <div className="form-actions">
                     <Link
-                      href={`/admin/master-data?editNoteType=${noteType.id}`}
+                      href={`/admin/master-data?editNoteType=${noteType.id}#note-types`}
                       className="link-button secondary"
                     >
                       Edit
