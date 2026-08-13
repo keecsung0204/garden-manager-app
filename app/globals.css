@@ -841,3 +841,19 @@ button:disabled {
   text-align: center;
   justify-content: center;
 }
+.master-data-menu {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.master-data-menu .link-button {
+  justify-content: center;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .master-data-menu {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

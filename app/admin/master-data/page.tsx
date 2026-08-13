@@ -272,7 +272,7 @@ searchParams?: {
         </Link>
       </div>
 
-      <div className="page-actions">
+      <div className="page-actions master-data-menu">
         <a href="#areas" className="link-button secondary">
           Areas
         </a>
