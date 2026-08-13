@@ -53,6 +53,7 @@ export default async function Home({
       area: true,
       category: true,
       status: true,
+      species: true,
       photos: {
         orderBy: [
           { isCover: "desc" },
@@ -158,6 +159,15 @@ export default async function Home({
                     <Link className="plant-name-link" href={`/plants/${plant.id}`}>
                       {plant.plantName}
                     </Link>
+
+                    {plant.species && (
+                      <div className="plant-species-small">
+                        {plant.species.commonName}
+                        {plant.species.scientificName
+                          ? ` · ${plant.species.scientificName}`
+                          : ""}
+                      </div>
+                    )}
                   </td>
                   <td>
                     {plant.area
