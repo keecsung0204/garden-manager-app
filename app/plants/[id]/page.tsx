@@ -406,7 +406,7 @@ export default async function PlantDetailPage({
                 </div>
 
                 <div className="note-body">
-                  <p className="note-content">{note.content}</p>
+                  <div className="note-content">{note.content}</div>
                   {note.photos.length > 0 && (
                     <div className="note-photos">
                       {note.photos.map((photo) => (

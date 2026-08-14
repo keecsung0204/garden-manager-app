@@ -118,6 +118,16 @@ ${note.photos
 - 추가로 확인해야 할 특징
 - 현재 보이는 전반적인 건강 상태
 
+확실하지 않은 내용은 추측이라고 표시해 주세요.
+
+마지막에는 반드시 아래 형식으로 식물 정보를 정리해 주세요.
+
+[Species Result]
+Common Name:
+Scientific Name:
+Cultivar:
+Confidence:
+
 확실하지 않은 내용은 추측이라고 표시해 주세요.`;
 
     return (

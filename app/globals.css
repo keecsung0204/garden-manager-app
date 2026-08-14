@@ -236,8 +236,10 @@ body {
 }
 
 .note-content {
+  flex: 1;
   margin: 0 0 10px 0;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 button:disabled {
@@ -464,11 +466,6 @@ button:disabled {
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #d7e2d0;
-}
-
-.note-content {
-  flex: 1;
-  margin: 0;
 }
 
 .photo-lightbox {
