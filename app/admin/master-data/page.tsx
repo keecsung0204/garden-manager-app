@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import SubmitButton from "@/app/components/SubmitButton";
 
 async function addArea(formData: FormData) {
   "use server";
@@ -227,6 +228,18 @@ async function addSpecies(formData: FormData) {
 
   if (!commonName || !scientificName) {
     return;
+  }
+
+  const existingSpecies = await prisma.plantSpecies.findFirst({
+    where: {
+      commonName,
+      scientificName,
+      cultivar: cultivar || null,
+    },
+  });
+
+  if (existingSpecies) {
+    redirect("/admin/master-data#species");
   }
 
   await prisma.plantSpecies.create({
@@ -785,10 +798,11 @@ searchParams?: {
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="link-button">
-              {editingSpecies ? "Save Species" : "Add Species"}
-            </button>
-
+          <SubmitButton
+            pendingText={editingSpecies ? "Saving Species..." : "Adding Species..."}
+          >
+            {editingSpecies ? "Save Species" : "Add Species"}
+          </SubmitButton>
             {editingSpecies && (
               <Link
                 href="/admin/master-data#species"
