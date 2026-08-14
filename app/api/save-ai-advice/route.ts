@@ -6,9 +6,11 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     const plantId = Number(formData.get("plantId"));
-    const content = String(formData.get("content") || "").trim();
+    const mode = String(formData.get("mode") || "identify");
+    const questionText = String(formData.get("questionText") || "").trim();
+    const answerText = String(formData.get("content") || "").trim();
 
-    if (!plantId || !content) {
+    if (!plantId || !answerText) {
       return NextResponse.json(
         { error: "Missing data" },
         { status: 400 }
@@ -33,7 +35,14 @@ export async function POST(request: Request) {
       data: {
         plantId,
         noteTypeId: aiAdviceType.id,
-        content,
+        content: `[AI Mode]
+        ${mode === "diagnose" ? "Diagnose" : "Identify"}
+
+        [AI Question]
+        ${questionText}
+
+        [AI Answer]
+        ${answerText}`,
       },
     });
 

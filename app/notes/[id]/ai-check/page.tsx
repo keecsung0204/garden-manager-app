@@ -260,7 +260,11 @@ ${note.photos
                     <pre className="ai-question-text">{questionText}</pre>
                 </div>
             </section>
-            <SaveAIAdvice plantId={note.plantId} />
+            <SaveAIAdvice
+                plantId={note.plantId}
+                mode={mode}
+                questionText={questionText}
+            />
         </main>
     );
 }

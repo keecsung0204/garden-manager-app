@@ -4,15 +4,23 @@ import { useState } from "react";
 
 type SaveAIAdviceProps = {
   plantId: number;
+  mode: "identify" | "diagnose";
+  questionText: string;
 };
 
-export default function SaveAIAdvice({ plantId }: SaveAIAdviceProps) {
+export default function SaveAIAdvice({
+  plantId,
+  mode,
+  questionText,
+}: SaveAIAdviceProps) {
   const [saving, setSaving] = useState(false);
 
   async function saveAdvice(formData: FormData) {
     setSaving(true);
 
     formData.set("plantId", String(plantId));
+    formData.set("mode", mode);
+    formData.set("questionText", questionText);
 
     const response = await fetch("/api/save-ai-advice", {
       method: "POST",
