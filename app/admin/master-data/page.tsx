@@ -238,10 +238,9 @@ async function addSpecies(formData: FormData) {
     },
   });
 
-  if (existingSpecies) {
-    redirect("/admin/master-data#species");
-  }
-
+    if (existingSpecies) {
+      return;
+    } 
   await prisma.plantSpecies.create({
     data: {
       commonName,
