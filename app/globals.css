@@ -871,3 +871,23 @@ button:disabled {
   color: #666;
   line-height: 1.25;
 }
+.ai-save-button {
+  margin-top: 12px;
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: 1px solid #b8d3ad;
+  background: #e5f0df;
+  color: #2f5d3a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ai-save-button:hover {
+  background: #d6e8ce;
+}
+
+.ai-save-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
