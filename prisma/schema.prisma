@@ -85,8 +85,10 @@ model PlantNote {
   noteTypeId  Int?
   noteTypeRef NoteType? @relation(fields: [noteTypeId], references: [id])
 
-  content String
-  photos  PlantPhoto[]
+  content           String
+  aiQuestionSummary String?
+  aiAnswerSummary   String?
+  photos            PlantPhoto[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

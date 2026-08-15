@@ -54,10 +54,12 @@ export default async function AiCheckPage({
         displayUrl: await getGardenPhotoUrl(photo.filePath),
     }))
 );
-
-   const questionText =
+    const inquiryDate = note.noteDate.toLocaleDateString("en-CA");
+    const questionText =
     mode === "diagnose"
-        ? `이 식물에서 보이는 문제를 진단해 주세요.
+        ? `[${inquiryDate} · ${note.plant.plantName} · Diagnose]
+
+        이 식물에서 보이는 문제를 진단해 주세요.이 식물에서 보이는 문제를 진단해 주세요.
 
 위치: Southern California, Fullerton 근처 집 정원
 Area: ${note.plant.area?.name || "미지정"}
@@ -87,7 +89,8 @@ ${note.photos
 - 긴급한 문제인지 여부
 
 확실하지 않은 내용은 추측이라고 표시해 주세요.`
-        : `이 식물의 종류를 확인해 주세요.
+        : `[${inquiryDate} · ${note.plant.plantName} · Identify]
+        이 식물의 종류를 확인해 주세요.
 
 위치: Southern California, Fullerton 근처 집 정원
 Area: ${note.plant.area?.name || "미지정"}
@@ -127,8 +130,7 @@ Common Name:
 Scientific Name:
 Cultivar:
 Confidence:
-
-확실하지 않은 내용은 추측이라고 표시해 주세요.`;
+`;
 
     return (
         <main className="edit-page">
@@ -271,9 +273,8 @@ Confidence:
                 </div>
             </section>
             <SaveAIAdvice
+                noteId={note.id}
                 plantId={note.plantId}
-                mode={mode}
-                questionText={questionText}
             />
         </main>
     );

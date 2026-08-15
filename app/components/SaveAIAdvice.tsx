@@ -3,24 +3,20 @@
 import { useState } from "react";
 
 type SaveAIAdviceProps = {
+  noteId: number;
   plantId: number;
-  mode: "identify" | "diagnose";
-  questionText: string;
 };
 
 export default function SaveAIAdvice({
+  noteId,
   plantId,
-  mode,
-  questionText,
 }: SaveAIAdviceProps) {
   const [saving, setSaving] = useState(false);
 
-  async function saveAdvice(formData: FormData) {
+  async function saveSummary(formData: FormData) {
     setSaving(true);
 
-    formData.set("plantId", String(plantId));
-    formData.set("mode", mode);
-    formData.set("questionText", questionText);
+    formData.set("noteId", String(noteId));
 
     const response = await fetch("/api/save-ai-advice", {
       method: "POST",
@@ -28,33 +24,47 @@ export default function SaveAIAdvice({
     });
 
     if (response.ok) {
-      alert("AI Advice saved");
+      alert("AI Summary saved");
       window.location.href = `/plants/${plantId}`;
     } else {
-      alert("Failed to save AI Advice");
+      alert("Failed to save AI Summary");
       setSaving(false);
     }
   }
 
   return (
     <section className="detail-card ai-check-card">
-      <h2>AI Advice 저장</h2>
+      <h2>AI 상담 요약 저장</h2>
 
-      <form action={saveAdvice}>
-        <textarea
-          name="content"
-          rows={10}
-          required
-          placeholder="ChatGPT 답변을 여기에 붙여 넣으세요."
-          style={{ width: "100%" }}
-        />
+      <form action={saveSummary}>
+        <div className="form-row">
+          <label htmlFor="aiQuestionSummary">문의 요약</label>
+          <textarea
+            id="aiQuestionSummary"
+            name="aiQuestionSummary"
+            rows={5}
+            required
+            placeholder="ChatGPT가 요약한 문의 내용 200~300자를 붙여 넣으세요."
+          />
+        </div>
+
+        <div className="form-row">
+          <label htmlFor="aiAnswerSummary">답변 요약</label>
+          <textarea
+            id="aiAnswerSummary"
+            name="aiAnswerSummary"
+            rows={5}
+            required
+            placeholder="ChatGPT가 요약한 답변 200~300자를 붙여 넣으세요."
+          />
+        </div>
 
         <button
-            type="submit"
-            className="ai-save-button"
-            disabled={saving}
+          type="submit"
+          className="ai-save-button"
+          disabled={saving}
         >
-          {saving ? "Saving..." : "Save AI Advice"}
+          {saving ? "Saving..." : "Save AI Summary"}
         </button>
       </form>
     </section>

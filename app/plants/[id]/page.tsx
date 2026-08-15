@@ -418,8 +418,27 @@ export default async function PlantDetailPage({
                 </div>
 
                 <div className="note-body">
-                  <div className="note-content">{note.content}</div>
-                  {note.photos.length > 0 && (
+                <div className="note-content">{note.content}</div>
+
+                  {(note.aiQuestionSummary || note.aiAnswerSummary) && (
+                    <div className="ai-summary-box">
+                      {note.aiQuestionSummary && (
+                        <div className="ai-summary-section">
+                          <strong>AI 문의 요약</strong>
+                          <div>{note.aiQuestionSummary}</div>
+                        </div>
+                      )}
+
+                      {note.aiAnswerSummary && (
+                        <div className="ai-summary-section">
+                          <strong>AI 답변 요약</strong>
+                          <div>{note.aiAnswerSummary}</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                {note.photos.length > 0 && (
                     <div className="note-photos">
                       {note.photos.map((photo) => (
                         <div key={photo.id} className="note-photo-item">
