@@ -53,6 +53,7 @@ export default async function EditPlantPage({
       | "Tentative"
       | "Confirmed";
     const scientificName = formData.get("scientificName") as string;
+    const chatgptUrl = formData.get("chatgptUrl") as string;
     const currentPlantId = Number(params.id);
 
     await prisma.plant.update({
@@ -67,6 +68,7 @@ export default async function EditPlantPage({
         speciesId: speciesId ? Number(speciesId) : null,
         identifyStatus,
         scientificName: scientificName || null,
+        chatgptUrl: chatgptUrl || null,
       },
     });
 
@@ -95,6 +97,7 @@ export default async function EditPlantPage({
           statusId: plant.statusId,
           speciesId: plant.speciesId,
           scientificName: plant.scientificName,
+          chatgptUrl: plant.chatgptUrl,
         }}
         submitLabel="Save Plant"
       />

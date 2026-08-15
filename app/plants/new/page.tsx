@@ -15,6 +15,7 @@ async function createPlant(formData: FormData) {
     const identifyStatus = formData.get("identifyStatus")?.toString();
     const statusId = formData.get("statusId")?.toString();
     const scientificName = formData.get("scientificName")?.toString().trim();
+    const chatgptUrl = formData.get("chatgptUrl")?.toString().trim();
 
     if (!plantCode || !plantName) {
         return;
@@ -33,6 +34,7 @@ async function createPlant(formData: FormData) {
             statusId: statusId ? Number(statusId) : null,
             speciesId: speciesId ? Number(speciesId) : null,
             scientificName: scientificName || null,
+            chatgptUrl: chatgptUrl || null,
         },
     });
 

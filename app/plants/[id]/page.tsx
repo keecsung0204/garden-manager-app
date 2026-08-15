@@ -250,7 +250,19 @@ export default async function PlantDetailPage({
         >
           Add Note
         </Link>
+
+        {plant.chatgptUrl && (
+          <a
+            className="link-button secondary"
+            href={plant.chatgptUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open ChatGPT
+          </a>
+        )}
       </div>
+      
       <section className="detail-card">
         <h2>Plant Detail</h2>
 

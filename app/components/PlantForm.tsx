@@ -24,6 +24,7 @@ type PlantFormValues = {
     identifyStatus?: "Unknown" | "Tentative" | "Confirmed";
     statusId?: number | null;
     scientificName?: string | null;
+    chatgptUrl?: string | null;
     speciesId?: number | null;
 };
 
@@ -169,6 +170,17 @@ export default function PlantForm({
             <div className="form-actions">
                 <button type="submit">{submitLabel}</button>
             </div>
+
+            <div className="form-row">
+                <label htmlFor="chatgptUrl">ChatGPT Consultation URL</label>
+                <input
+                    id="chatgptUrl"
+                    name="chatgptUrl"
+                    type="url"
+                    placeholder="https://chatgpt.com/c/..."
+                    defaultValue={defaultValues?.chatgptUrl || ""}
+                />
+            </div>           
         </form>
     );
 }
