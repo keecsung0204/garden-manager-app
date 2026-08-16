@@ -251,7 +251,7 @@ async function addSpecies(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data#species");
+  return;
 }
 
 async function updateSpecies(formData: FormData) {
