@@ -59,13 +59,26 @@ export default function SaveAIAdvice({
           />
         </div>
 
-        <button
-          type="submit"
-          className="ai-save-button"
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Save AI Summary"}
-        </button>
+        <div className="form-actions">
+          <button
+            type="submit"
+            className="ai-save-button"
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Save AI Summary"}
+          </button>
+
+          <button
+            type="button"
+            className="link-button secondary"
+            disabled={saving}
+            onClick={() => {
+              window.location.href = `/plants/${plantId}`;
+            }}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </section>
   );
