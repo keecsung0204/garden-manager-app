@@ -12,6 +12,42 @@ export default function SaveAIAdvice({
   plantId,
 }: SaveAIAdviceProps) {
   const [saving, setSaving] = useState(false);
+  const [fullAnswer, setFullAnswer] = useState("");
+  const [questionSummary, setQuestionSummary] = useState("");
+  const [answerSummary, setAnswerSummary] = useState("");
+
+  function extractSummaries() {
+    const questionMarker = "[문의 요약]";
+    const answerMarker = "[답변 요약]";
+
+    const questionStart = fullAnswer.indexOf(questionMarker);
+    const answerStart = fullAnswer.indexOf(answerMarker);
+
+    if (
+      questionStart === -1 ||
+      answerStart === -1 ||
+      answerStart <= questionStart
+    ) {
+      alert(
+        "[문의 요약] 또는 [답변 요약]을 찾을 수 없습니다."
+      );
+      return;
+    }
+
+    const extractedQuestion = fullAnswer
+      .slice(
+        questionStart + questionMarker.length,
+        answerStart
+      )
+      .trim();
+
+    const extractedAnswer = fullAnswer
+      .slice(answerStart + answerMarker.length)
+      .trim();
+
+    setQuestionSummary(extractedQuestion);
+    setAnswerSummary(extractedAnswer);
+  }
 
   async function saveSummary(formData: FormData) {
     setSaving(true);
@@ -36,26 +72,62 @@ export default function SaveAIAdvice({
     <section className="detail-card ai-check-card">
       <h2>AI 상담 요약 저장</h2>
 
+      <div className="form-row">
+        <label htmlFor="fullAiAnswer">
+          ChatGPT 답변 전체
+        </label>
+
+        <textarea
+          id="fullAiAnswer"
+          rows={10}
+          value={fullAnswer}
+          onChange={(e) => setFullAnswer(e.target.value)}
+          placeholder="ChatGPT 답변 전체를 한 번 붙여 넣으세요."
+        />
+      </div>
+
+      <div className="form-actions">
+        <button
+          type="button"
+          className="link-button"
+          onClick={extractSummaries}
+        >
+          요약 가져오기
+        </button>
+      </div>
+
       <form action={saveSummary}>
         <div className="form-row">
-          <label htmlFor="aiQuestionSummary">문의 요약</label>
+          <label htmlFor="aiQuestionSummary">
+            문의 요약
+          </label>
+
           <textarea
             id="aiQuestionSummary"
             name="aiQuestionSummary"
             rows={5}
             required
-            placeholder="ChatGPT가 요약한 문의 내용 200~300자를 붙여 넣으세요."
+            value={questionSummary}
+            onChange={(e) =>
+              setQuestionSummary(e.target.value)
+            }
           />
         </div>
 
         <div className="form-row">
-          <label htmlFor="aiAnswerSummary">답변 요약</label>
+          <label htmlFor="aiAnswerSummary">
+            답변 요약
+          </label>
+
           <textarea
             id="aiAnswerSummary"
             name="aiAnswerSummary"
             rows={5}
             required
-            placeholder="ChatGPT가 요약한 답변 200~300자를 붙여 넣으세요."
+            value={answerSummary}
+            onChange={(e) =>
+              setAnswerSummary(e.target.value)
+            }
           />
         </div>
 
@@ -65,7 +137,9 @@ export default function SaveAIAdvice({
             className="ai-save-button"
             disabled={saving}
           >
-            {saving ? "Saving..." : "Save AI Summary"}
+            {saving
+              ? "Saving..."
+              : "Save AI Summary"}
           </button>
 
           <button
