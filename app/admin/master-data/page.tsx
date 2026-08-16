@@ -21,8 +21,8 @@ async function addArea(formData: FormData) {
     },
   });
 
-  revalidatePath("/admin/master-data");
-  redirect("/admin/master-data#areas");
+revalidatePath("/admin/master-data");
+return;
 }
 
 async function updateArea(formData: FormData) {
