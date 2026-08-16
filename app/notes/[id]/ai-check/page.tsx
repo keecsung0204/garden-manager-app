@@ -13,6 +13,17 @@ export default async function AiCheckPage({
 }) {
     const noteId = Number(params.id);
     const mode = searchParams.mode === "diagnose" ? "diagnose" : "identify";
+    const summaryInstruction = `
+        마지막에 Garden Manager 기록용으로 아래 형식도 작성해 주세요.
+
+        [문의 요약]
+        200~300자
+
+        [답변 요약]
+        200~300자
+
+        답변 요약에는 주요 판단, 권장 조치, 앞으로 관찰할 사항을 포함해 주세요.
+        `;
 
     const note = await prisma.plantNote.findUnique({
         where: {
@@ -121,15 +132,7 @@ ${note.photos
 - 추가로 확인해야 할 특징
 - 현재 보이는 전반적인 건강 상태
 
-확실하지 않은 내용은 추측이라고 표시해 주세요.
-
-마지막에는 반드시 아래 형식으로 식물 정보를 정리해 주세요.
-
-[Species Result]
-Common Name:
-Scientific Name:
-Cultivar:
-Confidence:
+${summaryInstruction}
 `;
 
     return (
