@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
+import CopyButton from "@/app/components/CopyButton";
 import ConfirmDeleteButton from "@/app/components/ConfirmDeleteButton";
 import ConfirmPhotoDeleteButton from "@/app/components/ConfirmPhotoDeleteButton";
 import {
@@ -424,14 +425,20 @@ export default async function PlantDetailPage({
                     <div className="ai-summary-box">
                       {note.aiQuestionSummary && (
                         <div className="ai-summary-section">
-                          <strong>AI 문의 요약</strong>
+                          <div className="ai-summary-header">
+                            <strong>AI 문의 요약</strong>
+                            <CopyButton text={note.aiQuestionSummary} />
+                          </div>
                           <div>{note.aiQuestionSummary}</div>
                         </div>
                       )}
 
                       {note.aiAnswerSummary && (
                         <div className="ai-summary-section">
-                          <strong>AI 답변 요약</strong>
+                          <div className="ai-summary-header">
+                            <strong>AI 답변 요약</strong>
+                            <CopyButton text={note.aiAnswerSummary} />
+                          </div>
                           <div>{note.aiAnswerSummary}</div>
                         </div>
                       )}
