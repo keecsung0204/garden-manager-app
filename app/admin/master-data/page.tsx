@@ -66,7 +66,7 @@ async function addCategory(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data#categories");
+  return;
 }
 
 async function updateCategory(formData: FormData) {
@@ -114,7 +114,7 @@ async function addPlantStatus(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data#plant-status");
+  return;
 }
 
 async function updatePlantStatus(formData: FormData) {
@@ -167,7 +167,7 @@ async function addNoteType(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  redirect("/admin/master-data#note-types");
+  return;
 }
 
 async function updateNoteType(formData: FormData) {
