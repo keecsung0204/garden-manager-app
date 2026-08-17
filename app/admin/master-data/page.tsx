@@ -679,9 +679,11 @@ searchParams?: {
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="link-button">
+            <SubmitButton
+              pendingText={editingNoteType ? "Saving Note Type..." : "Adding Note Type..."}
+            >
               {editingNoteType ? "Save Note Type" : "Add Note Type"}
-            </button>
+            </SubmitButton>
 
             {editingNoteType && (
               <Link
