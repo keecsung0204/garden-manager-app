@@ -22,6 +22,8 @@ export default async function AiCheckPage({
         [답변 요약]
         200~300자
 
+        [요약 끝]
+
         답변 요약에는 주요 판단, 권장 조치, 앞으로 관찰할 사항을 포함해 주세요.
         `;
 
