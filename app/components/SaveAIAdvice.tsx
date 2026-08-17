@@ -19,6 +19,7 @@ export default function SaveAIAdvice({
   function extractSummaries() {
     const questionMarker = "[문의 요약]";
     const answerMarker = "[답변 요약]";
+    const endMarker = "[요약 끝]";
 
     const questionStart = fullAnswer.indexOf(questionMarker);
     const answerStart = fullAnswer.indexOf(answerMarker);
@@ -41,8 +42,16 @@ export default function SaveAIAdvice({
       )
       .trim();
 
+    const endStart = fullAnswer.indexOf(
+      endMarker,
+      answerStart + answerMarker.length
+    );
+
     const extractedAnswer = fullAnswer
-      .slice(answerStart + answerMarker.length)
+      .slice(
+        answerStart + answerMarker.length,
+        endStart === -1 ? fullAnswer.length : endStart
+      )
       .trim();
 
     setQuestionSummary(extractedQuestion);

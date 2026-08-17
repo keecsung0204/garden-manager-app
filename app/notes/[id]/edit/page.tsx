@@ -62,6 +62,8 @@ export default async function EditNotePage({
 
         const noteTypeId = formData.get("noteTypeId") as string;
         const content = formData.get("content") as string;
+        const aiQuestionSummary = formData.get("aiQuestionSummary") as string;
+        const aiAnswerSummary = formData.get("aiAnswerSummary") as string;
         const photo = formData.get("photo") as File | null;
         const newPhotoCaption = formData.get("newPhotoCaption") as string;
 
@@ -72,6 +74,8 @@ export default async function EditNotePage({
             data: {
                 noteTypeId: noteTypeId ? Number(noteTypeId) : null,
                 content,
+                aiQuestionSummary: aiQuestionSummary?.trim() || null,
+                aiAnswerSummary: aiAnswerSummary?.trim() || null,
             },
         });
         const photos = await prisma.plantPhoto.findMany({
@@ -157,6 +161,30 @@ export default async function EditNotePage({
                             defaultValue={note.content}
                         />
                     </div>
+
+                    {(note.aiQuestionSummary || note.aiAnswerSummary) && (
+                <>
+                    <div className="form-row">
+                        <label htmlFor="aiQuestionSummary">AI 문의 요약</label>
+                        <textarea
+                            id="aiQuestionSummary"
+                            name="aiQuestionSummary"
+                            rows={5}
+                            defaultValue={note.aiQuestionSummary || ""}
+                        />
+                    </div>
+
+                    <div className="form-row">
+                        <label htmlFor="aiAnswerSummary">AI 답변 요약</label>
+                        <textarea
+                            id="aiAnswerSummary"
+                            name="aiAnswerSummary"
+                            rows={5}
+                            defaultValue={note.aiAnswerSummary || ""}
+                        />
+                    </div>
+                </>
+            )}
                     {photoDisplayItems.length > 0 && (
                         <div className="form-row existing-photos-row">
                             <label>Existing Photos</label>
