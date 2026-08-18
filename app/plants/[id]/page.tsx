@@ -12,8 +12,52 @@ import {
 } from "@/lib/photoStorage";
 import NotePhotoViewer from "@/app/components/NotePhotoViewer";
 import PhotoInputPreview from "@/app/components/PhotoInputPreview";
-export const dynamic = "force-dynamic";
 
+function losAngelesLocalToDate(value: string) {
+  const [datePart, timePart] = value.split("T");
+
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+
+  const localAsUtc = Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour,
+    minute
+  );
+
+  function getOffset(timestamp: number) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Los_Angeles",
+      timeZoneName: "longOffset",
+    }).formatToParts(new Date(timestamp));
+
+    const zone = parts.find(
+      (part) => part.type === "timeZoneName"
+    )?.value;
+
+    const match = zone?.match(/GMT([+-])(\d{2}):(\d{2})/);
+
+    if (!match) {
+      return 0;
+    }
+
+    const sign = match[1] === "+" ? 1 : -1;
+    return sign * (Number(match[2]) * 60 + Number(match[3]));
+  }
+
+  let offsetMinutes = getOffset(localAsUtc);
+  let utcTime = localAsUtc - offsetMinutes * 60_000;
+
+  // DST 경계에서도 올바른 offset을 다시 한번 확인
+  offsetMinutes = getOffset(utcTime);
+  utcTime = localAsUtc - offsetMinutes * 60_000;
+
+  return new Date(utcTime);
+}
+
+export const dynamic = "force-dynamic";
 export default async function PlantDetailPage({
   params,
   searchParams,
@@ -107,7 +151,9 @@ export default async function PlantDetailPage({
         plantId: currentPlantId,
         noteTypeId: noteTypeId ? Number(noteTypeId) : null,
         content,
-        ...(noteDate ? { noteDate: new Date(noteDate) } : {}),
+        ...(noteDate
+          ? { noteDate: losAngelesLocalToDate(noteDate) }
+          : {}),
       },
     });
 
