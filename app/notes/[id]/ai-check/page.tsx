@@ -15,6 +15,8 @@ export default async function AiCheckPage({
     const mode = searchParams.mode === "diagnose" ? "diagnose" : "identify";
     const summaryInstruction = `
         마지막에 Garden Manager 기록용으로 아래 형식도 작성해 주세요.
+        
+        [Species] Common Name | Scientific Name | Cultivar
 
         [문의 요약]
         200~300자
