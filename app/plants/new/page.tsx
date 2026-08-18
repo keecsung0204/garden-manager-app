@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import PlantForm from "@/app/components/PlantForm";
 import { getPlantFormOptions } from "@/lib/getPlantFormOptions";
 
+export const dynamic = "force-dynamic";
 
 async function createPlant(formData: FormData) {
     "use server";
