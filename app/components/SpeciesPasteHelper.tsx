@@ -23,6 +23,20 @@ export default function SpeciesPasteHelper({
     return (value || "").trim().toLowerCase();
   }
 
+  function normalizeCultivar(value: string | null | undefined) {
+  const normalized = normalize(value);
+
+  if (
+    normalized === "unknown" ||
+    normalized === "none" ||
+    normalized === "-"
+  ) {
+    return "";
+  }
+
+  return normalized;
+}
+
   function checkAndFill() {
     let text = inputText.trim();
 
@@ -90,8 +104,9 @@ export default function SpeciesPasteHelper({
 
     const exactMatch = sameScientificName.find(
       (species) =>
-        normalize(species.cultivar) === normalize(cultivar)
-    );
+        normalizeCultivar(species.cultivar) ===
+        normalizeCultivar(cultivar)
+      );
 
     if (exactMatch) {
       setMessage(
