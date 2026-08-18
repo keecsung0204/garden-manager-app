@@ -397,7 +397,8 @@ export default async function PlantDetailPage({
 
                   <div className="note-header-actions">
                     <span className="note-date">
-                      {note.noteDate.toLocaleString([], {
+                      {note.noteDate.toLocaleString("en-US", {
+                        timeZone: "America/Los_Angeles",
                         year: "numeric",
                         month: "numeric",
                         day: "numeric",
