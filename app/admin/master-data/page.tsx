@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import SubmitButton from "@/app/components/SubmitButton";
+import SpeciesPasteHelper from "@/app/components/SpeciesPasteHelper";
 
 async function addArea(formData: FormData) {
   "use server";
@@ -747,6 +748,10 @@ searchParams?: {
 
       <section id="species" className="detail-card">
         <h2>Species</h2>
+
+        {!editingSpecies && (
+          <SpeciesPasteHelper speciesList={speciesList} />
+        )}
 
         <form
           action={editingSpecies ? updateSpecies : addSpecies}
