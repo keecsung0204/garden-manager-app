@@ -77,22 +77,15 @@ export default async function Home({
 
   return (
     <main style={{ padding: "20px", maxWidth: "900px" }}>
-      <h1>Garden Manager</h1>
-      <div className="home-actions">
-        <Link href="/plants/new" className="link-button">
-          Add New Plant
-        </Link>
-        <Link href="/admin/master-data" className="link-button secondary">
-          Manage Data
-        </Link>
-
-        <Link href="/" className="link-button secondary">
-          Clear Filters
-        </Link>
-      </div>
 
       <section className="detail-card">
-        <h2>Plants ({plantsWithPhotoUrls.length})</h2>
+        <div className="plants-heading-row">
+          <h2>Plants ({plantsWithPhotoUrls.length})</h2>
+
+          <Link href="/" className="link-button secondary">
+            Clear Filters
+          </Link>
+        </div>
 
         <table className="plant-table">
           <thead>
