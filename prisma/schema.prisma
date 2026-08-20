@@ -49,6 +49,13 @@ model Plant {
   scientificName String?
   chatgptUrl     String?
   identifyStatus IdentifyStatus @default(Unknown)
+
+  waterNeedLevel       Int?
+  sunNeedLevel         Int?
+  moistureCheckDepthCm Int?
+  moistureTrigger      Int?
+  wateringGuide        String?
+
   statusId       Int?
   status         PlantStatus?   @relation(fields: [statusId], references: [id])
 

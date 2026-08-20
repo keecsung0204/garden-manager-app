@@ -56,6 +56,19 @@ function losAngelesLocalToDate(value: string) {
 
   return new Date(utcTime);
 }
+function careLevelText(level: number | null) {
+  if (!level) return "-";
+
+  const labels = [
+    "Very Low",
+    "Low",
+    "Medium",
+    "High",
+    "Very High",
+  ];
+
+  return `${level} - ${labels[level - 1]}`;
+}
 
 export const dynamic = "force-dynamic";
 export default async function PlantDetailPage({
@@ -358,6 +371,39 @@ export default async function PlantDetailPage({
         <div className="detail-row">
           <span className="detail-label">Cultivar</span>
           <span>{plant.species?.cultivar || "-"}</span>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Water Need</span>
+          <span>{careLevelText(plant.waterNeedLevel)}</span>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Sun Need</span>
+          <span>{careLevelText(plant.sunNeedLevel)}</span>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Moisture Check Depth</span>
+          <span>
+            {plant.moistureCheckDepthCm != null
+              ? `${plant.moistureCheckDepthCm} cm`
+              : "-"}
+          </span>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Moisture Trigger</span>
+          <span>
+            {plant.moistureTrigger != null
+              ? plant.moistureTrigger
+              : "-"}
+          </span>
+        </div>
+
+        <div className="detail-row">
+          <span className="detail-label">Watering Guide</span>
+          <span>{plant.wateringGuide || "-"}</span>
         </div>
       </section>
       {showAddNote && (

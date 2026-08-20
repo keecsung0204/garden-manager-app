@@ -26,6 +26,12 @@ type PlantFormValues = {
     scientificName?: string | null;
     chatgptUrl?: string | null;
     speciesId?: number | null;
+
+    waterNeedLevel?: number | null;
+    sunNeedLevel?: number | null;
+    moistureCheckDepthCm?: number | null;
+    moistureTrigger?: number | null;
+    wateringGuide?: string | null;
 };
 
 type PlantFormProps = {
@@ -166,11 +172,69 @@ export default function PlantForm({
                     defaultValue={defaultValues?.scientificName || ""}
                 />
             </div>
-
-            <div className="form-actions">
-                <button type="submit">{submitLabel}</button>
+            <div className="form-row">
+                <label htmlFor="waterNeedLevel">Water Need Level</label>
+                <select
+                    id="waterNeedLevel"
+                    name="waterNeedLevel"
+                    defaultValue={defaultValues?.waterNeedLevel?.toString() || ""}
+                >
+                    <option value="">선택 안 함</option>
+                    <option value="1">1 - Very Low</option>
+                    <option value="2">2 - Low</option>
+                    <option value="3">3 - Medium</option>
+                    <option value="4">4 - High</option>
+                    <option value="5">5 - Very High</option>
+                </select>
             </div>
 
+            <div className="form-row">
+                <label htmlFor="sunNeedLevel">Sun Need Level</label>
+                <select
+                    id="sunNeedLevel"
+                    name="sunNeedLevel"
+                    defaultValue={defaultValues?.sunNeedLevel?.toString() || ""}
+                >
+                    <option value="">선택 안 함</option>
+                    <option value="1">1 - Very Low</option>
+                    <option value="2">2 - Low</option>
+                    <option value="3">3 - Medium</option>
+                    <option value="4">4 - High</option>
+                    <option value="5">5 - Very High</option>
+                </select>
+            </div>
+
+            <div className="form-row">
+                <label htmlFor="moistureCheckDepthCm">Moisture Check Depth (cm)</label>
+                <input
+                    id="moistureCheckDepthCm"
+                    name="moistureCheckDepthCm"
+                    type="number"
+                    min="0"
+                    defaultValue={defaultValues?.moistureCheckDepthCm ?? ""}
+                />
+            </div>
+
+            <div className="form-row">
+                <label htmlFor="moistureTrigger">Moisture Trigger</label>
+                <input
+                    id="moistureTrigger"
+                    name="moistureTrigger"
+                    type="number"
+                    min="0"
+                    defaultValue={defaultValues?.moistureTrigger ?? ""}
+                />
+            </div>
+
+            <div className="form-row">
+                <label htmlFor="wateringGuide">Watering Guide</label>
+                <textarea
+                    id="wateringGuide"
+                    name="wateringGuide"
+                    rows={4}
+                    defaultValue={defaultValues?.wateringGuide || ""}
+                />
+            </div>
             <div className="form-row">
                 <label htmlFor="chatgptUrl">ChatGPT Consultation URL</label>
                 <input
@@ -180,7 +244,11 @@ export default function PlantForm({
                     placeholder="https://chatgpt.com/c/..."
                     defaultValue={defaultValues?.chatgptUrl || ""}
                 />
-            </div>           
+            </div>  
+            <div className="form-actions">
+                <button type="submit">{submitLabel}</button>
+            </div>
+         
         </form>
     );
 }

@@ -54,6 +54,11 @@ export default async function EditPlantPage({
       | "Confirmed";
     const scientificName = formData.get("scientificName") as string;
     const chatgptUrl = formData.get("chatgptUrl") as string;
+    const waterNeedLevel = formData.get("waterNeedLevel") as string;
+    const sunNeedLevel = formData.get("sunNeedLevel") as string;
+    const moistureCheckDepthCm = formData.get("moistureCheckDepthCm") as string;
+    const moistureTrigger = formData.get("moistureTrigger") as string;
+    const wateringGuide = formData.get("wateringGuide") as string;
     const currentPlantId = Number(params.id);
 
     await prisma.plant.update({
@@ -69,6 +74,13 @@ export default async function EditPlantPage({
         identifyStatus,
         scientificName: scientificName || null,
         chatgptUrl: chatgptUrl || null,
+        waterNeedLevel: waterNeedLevel ? Number(waterNeedLevel) : null,
+        sunNeedLevel: sunNeedLevel ? Number(sunNeedLevel) : null,
+        moistureCheckDepthCm: moistureCheckDepthCm
+          ? Number(moistureCheckDepthCm)
+          : null,
+        moistureTrigger: moistureTrigger ? Number(moistureTrigger) : null,
+        wateringGuide: wateringGuide?.trim() || null,
       },
     });
 
@@ -98,6 +110,11 @@ export default async function EditPlantPage({
           speciesId: plant.speciesId,
           scientificName: plant.scientificName,
           chatgptUrl: plant.chatgptUrl,
+          waterNeedLevel: plant.waterNeedLevel,
+          sunNeedLevel: plant.sunNeedLevel,
+          moistureCheckDepthCm: plant.moistureCheckDepthCm,
+          moistureTrigger: plant.moistureTrigger,
+          wateringGuide: plant.wateringGuide,
         }}
         submitLabel="Save Plant"
       />

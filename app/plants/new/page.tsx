@@ -17,6 +17,11 @@ async function createPlant(formData: FormData) {
     const statusId = formData.get("statusId")?.toString();
     const scientificName = formData.get("scientificName")?.toString().trim();
     const chatgptUrl = formData.get("chatgptUrl")?.toString().trim();
+    const waterNeedLevel = formData.get("waterNeedLevel")?.toString();
+    const sunNeedLevel = formData.get("sunNeedLevel")?.toString();
+    const moistureCheckDepthCm = formData.get("moistureCheckDepthCm")?.toString();
+    const moistureTrigger = formData.get("moistureTrigger")?.toString();
+    const wateringGuide = formData.get("wateringGuide")?.toString().trim();
 
     if (!plantCode || !plantName) {
         return;
@@ -36,6 +41,13 @@ async function createPlant(formData: FormData) {
             speciesId: speciesId ? Number(speciesId) : null,
             scientificName: scientificName || null,
             chatgptUrl: chatgptUrl || null,
+            waterNeedLevel: waterNeedLevel ? Number(waterNeedLevel) : null,
+            sunNeedLevel: sunNeedLevel ? Number(sunNeedLevel) : null,
+            moistureCheckDepthCm: moistureCheckDepthCm
+                ? Number(moistureCheckDepthCm)
+                : null,
+            moistureTrigger: moistureTrigger ? Number(moistureTrigger) : null,
+            wateringGuide: wateringGuide || null,
         },
     });
 
