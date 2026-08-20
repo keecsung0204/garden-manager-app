@@ -950,12 +950,12 @@ button:disabled {
 }
 .plant-table th:nth-child(1),
 .plant-table td:nth-child(1) {
-  min-width: 72px;
+  min-width: 65px;
 }
 
 .plant-table th:nth-child(2),
 .plant-table td:nth-child(2) {
-  min-width: 90px;
+  min-width: 70px;
 }
 
 .plant-table th:nth-child(3),
@@ -965,25 +965,25 @@ button:disabled {
 
 .plant-table th:nth-child(4),
 .plant-table td:nth-child(4) {
-  min-width: 150px;
+  min-width: 170px;
 }
 
 .plant-table th:nth-child(5),
 .plant-table td:nth-child(5) {
-  min-width: 150px;
+  min-width: 100px;
 }
 
 .plant-table th:nth-child(6),
 .plant-table td:nth-child(6) {
-  min-width: 140px;
+  min-width: 130px;
 }
 
 .plant-table th:nth-child(7),
 .plant-table td:nth-child(7) {
-  min-width: 110px;
+  min-width: 90px;
 }
 
 .plant-table th:nth-child(8),
 .plant-table td:nth-child(8) {
-  min-width: 110px;
+  min-width: 90px;
 }
