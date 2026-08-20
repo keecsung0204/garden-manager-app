@@ -914,12 +914,12 @@ button:disabled {
   top: 0;
   z-index: 1000;
   background: white;
-  border-bottom: 1px solid #ddd;
 }
 
 .app-header-inner {
   padding: 10px 20px;
   max-width: 900px;
+  margin: 0 auto;
 }
 
 .app-title {
@@ -936,8 +936,13 @@ button:disabled {
 .plants-heading-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
+  gap: 10px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.plants-heading-row h2 {
+  margin: 0;
 }
 
 .plants-heading-row h2 {

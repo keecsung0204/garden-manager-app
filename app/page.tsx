@@ -85,6 +85,24 @@ export default async function Home({
           <Link href="/" className="link-button secondary">
             Clear Filters
           </Link>
+
+          <span>Area</span>
+          <AreaFilter
+            areas={areas}
+            selectedAreaId={searchParams?.areaId || ""}
+          />
+
+          <span>Category</span>
+          <CategoryFilter
+            categories={categories}
+            selectedCategoryId={searchParams?.categoryId || ""}
+          />
+
+          <span>Status</span>
+          <StatusFilter
+            statuses={statuses}
+            selectedStatusId={searchParams?.statusId || ""}
+          />
         </div>
 
         <table className="plant-table">
@@ -98,33 +116,7 @@ export default async function Home({
               <th>Identify Status</th>
               <th>Status</th>
               <th>Actions</th>
-            </tr>
-
-            <tr>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th>
-                <AreaFilter
-                  areas={areas}
-                  selectedAreaId={searchParams?.areaId || ""}
-                />
-              </th>
-              <th>
-                <CategoryFilter
-                  categories={categories}
-                  selectedCategoryId={searchParams?.categoryId || ""}
-                />
-              </th>
-              <th></th>
-              <th>
-                <StatusFilter
-                  statuses={statuses}
-                  selectedStatusId={searchParams?.statusId || ""}
-                />
-              </th>
-              <th></th>
-            </tr>
+            </tr>          
           </thead>
           <tbody>
             {plantsWithPhotoUrls.length === 0 ? (
