@@ -970,20 +970,20 @@ button:disabled {
 
 .plant-table th:nth-child(5),
 .plant-table td:nth-child(5) {
-  min-width: 100px;
+  min-width: 90px;
 }
 
 .plant-table th:nth-child(6),
 .plant-table td:nth-child(6) {
-  min-width: 110px;
+  min-width: 100px;
 }
 
 .plant-table th:nth-child(7),
 .plant-table td:nth-child(7) {
-  min-width: 90px;
+  min-width: 80px;
 }
 
 .plant-table th:nth-child(8),
 .plant-table td:nth-child(8) {
-  min-width: 90px;
+  min-width: 80px;
 }
