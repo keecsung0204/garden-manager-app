@@ -113,10 +113,10 @@
 }
 
 .plants-heading-row select {
-  width: auto;
-  min-width: 82px;
+  width: 120px;
+  min-width: 120px;
   margin-top: 0;
-  flex: 0 0 auto;
+  flex: 0 0 120px;
 }
 
 html {
