@@ -13,10 +13,18 @@ export default async function AiCheckPage({
 }) {
     const noteId = Number(params.id);
     const mode = searchParams.mode === "diagnose" ? "diagnose" : "identify";
-    const summaryInstruction = `
+   const summaryInstruction = `
         마지막에 Garden Manager 기록용으로 아래 형식도 작성해 주세요.
         
-        [Species] Common Name | Scientific Name | Cultivar
+        [Species]
+        Common Name | Scientific Name | Cultivar
+
+        [Care Guide]
+        Water Need Level: 1~5
+        Sun Need Level: 1~5
+        Moisture Check Depth (cm): 5~15 범위에서 현실적인 값
+        Moisture Trigger: 확실한 기준이 있으면 숫자, 불확실하면 Unknown
+        Watering Guide: 실제 관수 시점과 주의사항을 간단히 작성
 
         [문의 요약]
         200~300자
@@ -26,6 +34,10 @@ export default async function AiCheckPage({
 
         [요약 끝]
 
+        Water Need Level은 1=Very Low, 5=Very High 기준으로 작성해 주세요.
+        Sun Need Level도 1=Very Low, 5=Very High 기준으로 작성해 주세요.
+        Moisture Check Depth는 현재 일반적인 가정용 측정기로 확인 가능한 5~15cm 범위에서 제안해 주세요.
+        Moisture Trigger는 측정기 종류에 따라 값이 달라질 수 있으므로 확실하지 않으면 추측하지 말고 Unknown으로 작성해 주세요.
         답변 요약에는 주요 판단, 권장 조치, 앞으로 관찰할 사항을 포함해 주세요.
         `;
 
@@ -74,7 +86,7 @@ export default async function AiCheckPage({
     mode === "diagnose"
         ? `[${inquiryDate} · ${note.plant.plantName} · Diagnose]
 
-        이 식물에서 보이는 문제를 진단해 주세요.이 식물에서 보이는 문제를 진단해 주세요.
+        이 식물에서 보이는 문제를 진단해 주세요.
 
 위치: Southern California, Fullerton 근처 집 정원
 Area: ${note.plant.area?.name || "미지정"}
@@ -103,7 +115,10 @@ ${note.photos
 - 피해야 할 조치
 - 긴급한 문제인지 여부
 
-확실하지 않은 내용은 추측이라고 표시해 주세요.`
+확실하지 않은 내용은 추측이라고 표시해 주세요.
+
+${summaryInstruction}
+`
         : `[${inquiryDate} · ${note.plant.plantName} · Identify]
         이 식물의 종류를 확인해 주세요.
 

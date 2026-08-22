@@ -1,3 +1,4 @@
+import CareGuidePasteHelper from "./CareGuidePasteHelper";
 type Area = {
     id: number;
     areaCode: string;
@@ -172,6 +173,9 @@ export default function PlantForm({
                     defaultValue={defaultValues?.scientificName || ""}
                 />
             </div>
+
+            <CareGuidePasteHelper />
+
             <div className="form-row">
                 <label htmlFor="waterNeedLevel">Water Need Level</label>
                 <select
