@@ -18,6 +18,9 @@ export default function AppHeader() {
           <Link href="/irrigation-zones" className="link-button secondary">
             Irrigation Zones
           </Link>
+          <Link href="/references" className="link-button secondary">
+            Reference
+          </Link>
         </nav>
       </div>
     </header>
