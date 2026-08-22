@@ -72,12 +72,22 @@ export default async function ReferencesPage() {
 
           <div className="form-row">
             <label htmlFor="url">URL</label>
+
             <input
-              id="url"
-              name="url"
-              type="url"
-              placeholder="https://..."
+                id="url"
+                name="url"
+                type="url"
+                placeholder="https://..."
             />
+
+            <a
+                href="https://drive.google.com/drive/my-drive"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-button secondary"
+            >
+                Open Google Drive
+            </a>
           </div>
 
           <div className="form-row">
