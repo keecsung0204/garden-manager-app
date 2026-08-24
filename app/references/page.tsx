@@ -26,7 +26,67 @@ async function addReference(formData: FormData) {
   revalidatePath("/references");
 }
 
-export default async function ReferencesPage() {
+async function updateReference(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+  const title = formData.get("title")?.toString().trim();
+  const category = formData.get("category")?.toString().trim();
+  const description = formData.get("description")?.toString().trim();
+  const url = formData.get("url")?.toString().trim();
+  const sortOrder = formData.get("sortOrder")?.toString();
+
+  if (!id || !title) return;
+
+  await prisma.gardenReference.update({
+    where: {
+      id,
+    },
+    data: {
+      title,
+      category: category || null,
+      description: description || null,
+      url: url || null,
+      sortOrder: sortOrder ? Number(sortOrder) : 0,
+    },
+  });
+
+  revalidatePath("/references");
+}
+
+async function deactivateReference(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+
+  if (!id) return;
+
+  await prisma.gardenReference.update({
+    where: {
+      id,
+    },
+    data: {
+      isActive: false,
+    },
+  });
+
+  revalidatePath("/references");
+}
+
+export default async function ReferencesPage({
+  searchParams,
+}: {
+  searchParams?: { edit?: string };
+}) {
+  const editingId = searchParams?.edit
+    ? Number(searchParams.edit)
+    : null;
+
+  const editingReference = editingId
+    ? await prisma.gardenReference.findUnique({
+        where: { id: editingId },
+      })
+    : null;
   const references = await prisma.gardenReference.findMany({
     where: {
       isActive: true,
@@ -46,10 +106,25 @@ export default async function ReferencesPage() {
       <section className="detail-card">
         <h2>Reference Materials</h2>
 
-        <form action={addReference} className="form-grid">
+        <form
+          action={editingReference ? updateReference : addReference}
+          className="form-grid"
+        >
+          {editingReference && (
+            <input
+              type="hidden"
+              name="id"
+              value={editingReference.id}
+            />
+          )}
           <div className="form-row">
             <label htmlFor="title">Title</label>
-            <input id="title" name="title" required />
+            <input
+              id="title"
+              name="title"
+              required
+              defaultValue={editingReference?.title || ""}
+            />
           </div>
 
           <div className="form-row">
@@ -58,6 +133,7 @@ export default async function ReferencesPage() {
               id="category"
               name="category"
               placeholder="Layout, Irrigation, Manual..."
+              defaultValue={editingReference?.category || ""}
             />
           </div>
 
@@ -67,6 +143,7 @@ export default async function ReferencesPage() {
               id="description"
               name="description"
               rows={3}
+              defaultValue={editingReference?.description || ""}
             />
           </div>
 
@@ -78,6 +155,7 @@ export default async function ReferencesPage() {
                 name="url"
                 type="url"
                 placeholder="https://..."
+                defaultValue={editingReference?.url || ""}
             />
 
             <a
@@ -96,12 +174,14 @@ export default async function ReferencesPage() {
               id="sortOrder"
               name="sortOrder"
               type="number"
-              defaultValue="0"
+              defaultValue={editingReference?.sortOrder ?? 0}
             />
           </div>
 
           <div className="form-actions">
-            <button type="submit">Add Reference</button>
+            <button type="submit">
+            {editingReference ? "Save Reference" : "Add Reference"}
+          </button>
           </div>
         </form>
       </section>
@@ -139,6 +219,32 @@ export default async function ReferencesPage() {
                       >
                         Open
                       </a>
+                      <br />
+
+                      <a
+                        href={`/references?edit=${item.id}`}
+                        className="link-button secondary"
+                      >
+                        Edit
+                      </a>
+
+                      <form
+                        action={deactivateReference}
+                        style={{ display: "inline" }}
+                      >
+                        <input
+                          type="hidden"
+                          name="id"
+                          value={item.id}
+                        />
+
+                        <button
+                          type="submit"
+                          className="link-button secondary"
+                        >
+                          Inactive
+                        </button>
+                      </form>
                     </>
                   )}
                 </span>
