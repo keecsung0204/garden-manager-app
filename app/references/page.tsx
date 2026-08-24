@@ -73,6 +73,23 @@ async function deactivateReference(formData: FormData) {
   revalidatePath("/references");
 }
 
+async function activateReference(formData: FormData) {
+  "use server";
+
+  const id = Number(formData.get("id"));
+
+  if (!id) return;
+
+  await prisma.gardenReference.update({
+    where: { id },
+    data: {
+      isActive: true,
+    },
+  });
+
+  revalidatePath("/references");
+}
+
 export default async function ReferencesPage({
   searchParams,
 }: {
@@ -87,17 +104,23 @@ export default async function ReferencesPage({
         where: { id: editingId },
       })
     : null;
-  const references = await prisma.gardenReference.findMany({
+  const activeReferences = await prisma.gardenReference.findMany({
     where: {
       isActive: true,
     },
     orderBy: [
-      {
-        sortOrder: "asc",
-      },
-      {
-        title: "asc",
-      },
+      { sortOrder: "asc" },
+      { title: "asc" },
+    ],
+  });
+
+  const inactiveReferences = await prisma.gardenReference.findMany({
+    where: {
+      isActive: false,
+    },
+    orderBy: [
+      { sortOrder: "asc" },
+      { title: "asc" },
     ],
   });
 
@@ -189,11 +212,11 @@ export default async function ReferencesPage({
       <section className="detail-card">
         <h2>Saved References</h2>
 
-        {references.length === 0 ? (
+        {activeReferences.length === 0 ? (
           <p>아직 등록된 참고자료가 없습니다.</p>
         ) : (
           <div>
-            {references.map((item) => (
+            {activeReferences.map((item) => (
               <div className="detail-row" key={item.id}>
                 <span className="detail-label">
                   {item.category || "Reference"}
@@ -247,6 +270,54 @@ export default async function ReferencesPage({
                       </form>
                     </>
                   )}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+      <section className="detail-card">
+        <h2>Inactive References</h2>
+
+        {inactiveReferences.length === 0 ? (
+          <p>Inactive 상태의 참고자료가 없습니다.</p>
+        ) : (
+          <div>
+            {inactiveReferences.map((item) => (
+              <div className="detail-row" key={item.id}>
+                <span className="detail-label">
+                  {item.category || "Reference"}
+                </span>
+
+                <span>
+                  <strong>{item.title}</strong>
+
+                  {item.description && (
+                    <>
+                      <br />
+                      {item.description}
+                    </>
+                  )}
+
+                  <br />
+
+                  <form
+                    action={activateReference}
+                    style={{ display: "inline" }}
+                  >
+                    <input
+                      type="hidden"
+                      name="id"
+                      value={item.id}
+                    />
+
+                    <button
+                      type="submit"
+                      className="link-button secondary"
+                    >
+                      Activate
+                    </button>
+                  </form>
                 </span>
               </div>
             ))}
