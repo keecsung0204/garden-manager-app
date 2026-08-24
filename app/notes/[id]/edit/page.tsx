@@ -110,6 +110,7 @@ export default async function EditNotePage({
                     noteId,
                     fileName: uploadedPhoto.fileName,
                     filePath: uploadedPhoto.filePath,
+                    thumbnailPath: uploadedPhoto.thumbnailPath,
                     caption: newPhotoCaption?.trim() || null,
                 },
             });

@@ -137,10 +137,11 @@ model PlantPhoto {
   noteId Int
   note   PlantNote @relation(fields: [noteId], references: [id])
 
-  fileName String
-  filePath String
-  caption  String?
-  isCover  Boolean @default(false)
+  fileName      String
+  filePath      String
+  thumbnailPath String?
+  caption       String?
+  isCover       Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

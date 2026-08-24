@@ -70,7 +70,9 @@ export default async function Home({
     plants.map(async (plant) => ({
       ...plant,
       coverPhotoUrl: plant.photos[0]
-        ? await getGardenPhotoUrl(plant.photos[0].filePath)
+        ? await getGardenPhotoUrl(
+            plant.photos[0].thumbnailPath || plant.photos[0].filePath
+          )
         : null,
     }))
   );

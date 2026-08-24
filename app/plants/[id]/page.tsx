@@ -190,6 +190,7 @@ export default async function PlantDetailPage({
           noteId: newNote.id,
           fileName: uploadedPhoto.fileName,
           filePath: uploadedPhoto.filePath,
+          thumbnailPath: uploadedPhoto.thumbnailPath,
           caption: photoCaption?.trim() || null,
           isCover: !existingCoverPhoto,
         },
