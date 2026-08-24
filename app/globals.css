@@ -991,3 +991,12 @@ button:disabled {
 .plant-table td:nth-child(8) {
   min-width: 80px;
 }
+.home-hero-image {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  max-height: 360px;
+  object-fit: contain;
+  margin: 24px 0 0;
+  border-radius: 12px;
+}

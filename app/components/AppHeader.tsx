@@ -9,6 +9,9 @@ export default function AppHeader() {
           <Link href="/" className="link-button secondary">
             Home
           </Link>
+          <Link href="/plants" className="link-button secondary">
+            Plant List
+          </Link>
           <Link href="/plants/new" className="link-button">
             Add Plant
           </Link>
