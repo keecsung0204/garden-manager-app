@@ -32,6 +32,7 @@ export default function AreaFilter({
 
     const queryString = params.toString();
 
+    localStorage.setItem("plantListFilters", queryString);
     router.push(queryString ? `/plants?${queryString}` : "/plants");
   }
 

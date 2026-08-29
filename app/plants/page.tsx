@@ -4,6 +4,9 @@ import StatusFilter from "@/app/components/StatusFilter";
 import AreaFilter from "@/app/components/AreaFilter";
 import CategoryFilter from "@/app/components/CategoryFilter";
 import { getGardenPhotoUrl } from "@/lib/photoStorage";
+import PlantFilterRestore from "@/app/components/PlantFilterRestore";
+import ClearPlantFilters from "@/app/components/ClearPlantFilters";
+
 export const dynamic = "force-dynamic";
 
 export default async function Home({
@@ -79,14 +82,13 @@ export default async function Home({
 
   return (
     <main style={{ padding: "20px", maxWidth: "900px" }}>
+      <PlantFilterRestore />
 
       <section className="detail-card">
         <div className="plants-heading-row">
           <h2>Plants ({plantsWithPhotoUrls.length})</h2>
 
-          <Link href="/plants" className="link-button secondary">
-            Clear Filters
-          </Link>
+          <ClearPlantFilters />
 
           <span>Area</span>
           <AreaFilter

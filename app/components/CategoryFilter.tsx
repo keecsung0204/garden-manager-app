@@ -32,6 +32,7 @@ export default function CategoryFilter({
 
     const queryString = params.toString();
 
+    localStorage.setItem("plantListFilters", queryString);
     router.push(queryString ? `/plants?${queryString}` : "/plants");
   }
 
