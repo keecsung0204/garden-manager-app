@@ -84,7 +84,7 @@ export default async function Home({
         <div className="plants-heading-row">
           <h2>Plants ({plantsWithPhotoUrls.length})</h2>
 
-          <Link href="/" className="link-button secondary">
+          <Link href="/plants" className="link-button secondary">
             Clear Filters
           </Link>
 

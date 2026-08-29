@@ -32,7 +32,7 @@ export default function AreaFilter({
 
     const queryString = params.toString();
 
-    router.push(queryString ? `/?${queryString}` : "/");
+    router.push(queryString ? `/plants?${queryString}` : "/plants");
   }
 
   return (

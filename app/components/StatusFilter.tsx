@@ -31,7 +31,7 @@ export default function StatusFilter({
 
         const queryString = params.toString();
 
-        router.push(queryString ? `/?${queryString}` : "/");
+        router.push(queryString ? `/plants?${queryString}` : "/plants");
     }
 
     return (
