@@ -26,13 +26,14 @@ export default function CategoryFilter({
 
     if (categoryId) {
       params.set("categoryId", categoryId);
+      document.cookie = `plantCategoryId=${categoryId}; path=/; max-age=31536000`;
     } else {
       params.delete("categoryId");
+      document.cookie = "plantCategoryId=; path=/; max-age=0";
     }
 
     const queryString = params.toString();
 
-    localStorage.setItem("plantListFilters", queryString);
     router.push(queryString ? `/plants?${queryString}` : "/plants");
   }
 
@@ -43,6 +44,7 @@ export default function CategoryFilter({
       onChange={handleChange}
     >
       <option value="">All</option>
+
       {categories.map((category) => (
         <option key={category.id} value={category.id}>
           {category.categoryCode} - {category.name}

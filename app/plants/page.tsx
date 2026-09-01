@@ -4,7 +4,7 @@ import StatusFilter from "@/app/components/StatusFilter";
 import AreaFilter from "@/app/components/AreaFilter";
 import CategoryFilter from "@/app/components/CategoryFilter";
 import { getGardenPhotoUrl } from "@/lib/photoStorage";
-import PlantFilterRestore from "@/app/components/PlantFilterRestore";
+import { cookies } from "next/headers";
 import ClearPlantFilters from "@/app/components/ClearPlantFilters";
 
 export const dynamic = "force-dynamic";
@@ -20,14 +20,28 @@ export default async function Home({
 
 }) {
 
+  const cookieStore = cookies();
+
+  const savedStatusId = cookieStore.get("plantStatusId")?.value;
+  const savedAreaId = cookieStore.get("plantAreaId")?.value;
+  const savedCategoryId = cookieStore.get("plantCategoryId")?.value;
+
   const selectedStatusId = searchParams?.statusId
     ? Number(searchParams.statusId)
+    : savedStatusId
+    ? Number(savedStatusId)
     : undefined;
+
   const selectedAreaId = searchParams?.areaId
     ? Number(searchParams.areaId)
+    : savedAreaId
+    ? Number(savedAreaId)
     : undefined;
+
   const selectedCategoryId = searchParams?.categoryId
     ? Number(searchParams.categoryId)
+    : savedCategoryId
+    ? Number(savedCategoryId)
     : undefined;
 
   const statuses = await prisma.plantStatus.findMany({
@@ -82,7 +96,6 @@ export default async function Home({
 
   return (
     <main style={{ padding: "20px", maxWidth: "900px" }}>
-      <PlantFilterRestore />
 
       <section className="detail-card">
         <div className="plants-heading-row">
@@ -93,19 +106,19 @@ export default async function Home({
           <span>Area</span>
           <AreaFilter
             areas={areas}
-            selectedAreaId={searchParams?.areaId || ""}
+            selectedAreaId={selectedAreaId?.toString() || ""}
           />
 
           <span>Category</span>
           <CategoryFilter
             categories={categories}
-            selectedCategoryId={searchParams?.categoryId || ""}
+            selectedCategoryId={selectedCategoryId?.toString() || ""}
           />
 
           <span>Status</span>
           <StatusFilter
             statuses={statuses}
-            selectedStatusId={searchParams?.statusId || ""}
+            selectedStatusId={selectedStatusId?.toString() || ""}
           />
         </div>
 

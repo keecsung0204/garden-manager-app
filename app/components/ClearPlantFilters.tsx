@@ -6,7 +6,10 @@ export default function ClearPlantFilters() {
   const router = useRouter();
 
   function handleClear() {
-    localStorage.removeItem("plantListFilters");
+    document.cookie = "plantAreaId=; path=/; max-age=0";
+    document.cookie = "plantCategoryId=; path=/; max-age=0";
+    document.cookie = "plantStatusId=; path=/; max-age=0";
+
     router.push("/plants");
   }
 

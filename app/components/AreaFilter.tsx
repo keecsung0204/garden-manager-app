@@ -26,13 +26,14 @@ export default function AreaFilter({
 
     if (areaId) {
       params.set("areaId", areaId);
+      document.cookie = `plantAreaId=${areaId}; path=/; max-age=31536000`;
     } else {
       params.delete("areaId");
+      document.cookie = "plantAreaId=; path=/; max-age=0";
     }
 
     const queryString = params.toString();
 
-    localStorage.setItem("plantListFilters", queryString);
     router.push(queryString ? `/plants?${queryString}` : "/plants");
   }
 
