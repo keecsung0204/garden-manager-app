@@ -13,33 +13,62 @@ export default async function AiCheckPage({
 }) {
     const noteId = Number(params.id);
     const mode = searchParams.mode === "diagnose" ? "diagnose" : "identify";
-   const summaryInstruction = `
-        마지막에 Garden Manager 기록용으로 아래 형식도 작성해 주세요.
-        
-        [Species]
-        Common Name | Scientific Name | Cultivar
+    const identifySummaryInstruction = `
+    마지막에 Garden Manager 기록용으로 아래 형식도 작성해 주세요.
 
-        [Care Guide]
-        Water Need Level: 1~5
-        Sun Need Level: 1~5
-        Moisture Check Depth (cm): 5~15 범위에서 현실적인 값
-        Moisture Trigger: 확실한 기준이 있으면 숫자, 불확실하면 Unknown
-        Watering Guide: 실제 관수 시점과 주의사항을 간단히 작성
+    [Species]
+    Common Name | Scientific Name | Cultivar
 
-        [문의 요약]
-        200~300자
+    [Care Guide]
+    Water Need Level: 1~5
+    Sun Need Level: 1~5
+    Moisture Check Depth (cm): 5~15 범위에서 현실적인 값
+    Moisture Trigger: 확실한 기준이 있으면 숫자, 불확실하면 Unknown
+    Watering Guide: 실제 관수 시점과 주의사항을 간단히 작성
 
-        [답변 요약]
-        200~300자
+    [문의 요약]
+    200~300자
 
-        [요약 끝]
+    [답변 요약]
+    200~300자
 
-        Water Need Level은 1=Very Low, 5=Very High 기준으로 작성해 주세요.
-        Sun Need Level도 1=Very Low, 5=Very High 기준으로 작성해 주세요.
-        Moisture Check Depth는 현재 일반적인 가정용 측정기로 확인 가능한 5~15cm 범위에서 제안해 주세요.
-        Moisture Trigger는 측정기 종류에 따라 값이 달라질 수 있으므로 확실하지 않으면 추측하지 말고 Unknown으로 작성해 주세요.
-        답변 요약에는 주요 판단, 권장 조치, 앞으로 관찰할 사항을 포함해 주세요.
-        `;
+    [요약 끝]
+
+    Water Need Level은 1=Very Low, 5=Very High 기준으로 작성해 주세요.
+    Sun Need Level도 1=Very Low, 5=Very High 기준으로 작성해 주세요.
+    Moisture Check Depth는 현재 일반적인 가정용 측정기로 확인 가능한 5~15cm 범위에서 제안해 주세요.
+    Moisture Trigger는 측정기 종류에 따라 값이 달라질 수 있으므로 확실하지 않으면 추측하지 말고 Unknown으로 작성해 주세요.
+    답변 요약에는 식별 판단, 주요 관리 포인트, 앞으로 추가 확인할 사항을 포함해 주세요.
+    `;
+    const diagnoseSummaryInstruction = `
+    마지막에 Garden Manager 기록용으로 아래 형식도 작성해 주세요.
+
+    [Assessment]
+    Current Status: Normal | Watch | Problem | Urgent
+    Likely Cause: 가장 가능성이 높은 원인 또는 판단
+    Confidence: High | Medium | Low
+
+    [Action]
+    Now: 지금 해야 할 조치
+    Avoid: 피해야 할 조치
+    Recheck: 다시 확인할 시점 또는 조건
+
+    [문의 요약]
+    200~300자
+
+    [답변 요약]
+    200~300자
+
+    [요약 끝]
+
+    Current Status는 현재 상태의 심각도를 기준으로 선택해 주세요.
+    Likely Cause는 확실하지 않으면 가능한 원인임을 표시해 주세요.
+    Confidence는 사진과 관찰 내용만으로 판단한 확신도를 표시해 주세요.
+    Now에는 가장 우선적으로 해야 할 행동을 작성해 주세요.
+    Avoid에는 현재 상황에서 피해야 할 행동을 작성해 주세요.
+    Recheck에는 며칠 후, 몇 주 후 또는 어떤 변화가 생겼을 때 다시 확인할지 작성해 주세요.
+    답변 요약에는 현재 판단, 권장 조치, 앞으로 관찰할 사항을 포함해 주세요.
+    `;
 
     const note = await prisma.plantNote.findUnique({
         where: {
@@ -82,6 +111,66 @@ export default async function AiCheckPage({
     }))
 );
     const inquiryDate = note.noteDate.toLocaleDateString("en-CA");
+    const noteTypeCode = note.noteTypeRef?.typeCode || "";
+
+    const diagnoseRequest =
+    noteTypeCode === "NT02"
+        ? `
+    알고 싶은 것:
+    - 현재 보이는 상태가 정상 범위인지
+    - 사진과 관찰 내용에서 이상 징후가 있는지
+    - 지금 특별히 조치가 필요한지
+    - 앞으로 어떤 변화를 관찰해야 하는지
+    - 추가로 기록하면 좋은 항목
+    `
+        : noteTypeCode === "NT03"
+        ? `
+    알고 싶은 것:
+    - 사진과 관찰 내용에서 보이는 증상
+    - 가능한 원인을 가능성이 높은 순서대로
+    - 병충해, 물 부족, 과습, 영양 문제 가능성
+    - 지금 해야 할 우선 조치
+    - 피해야 할 조치
+    - 긴급한 문제인지 여부
+    - 추가로 확인해야 할 부분
+    `
+        : noteTypeCode === "NT04"
+        ? `
+    알고 싶은 것:
+    - 계획한 작업이 적절한지
+    - 지금 시기가 적절한지
+    - 작업 전에 확인해야 할 조건
+    - 예상되는 효과
+    - 주의해야 할 위험이나 부작용
+    - 더 나은 방법이나 순서가 있는지
+    `
+        : noteTypeCode === "NT05"
+        ? `
+    알고 싶은 것:
+    - 시행한 처치가 현재 문제에 적절했는지
+    - 기대할 수 있는 효과와 반응 시점
+    - 과도하거나 부족한 처치 가능성
+    - 추가 처치가 필요한지
+    - 앞으로 관찰해야 할 변화
+    - 피해야 할 추가 조치
+    `
+        : noteTypeCode === "NT06"
+        ? `
+    알고 싶은 것:
+    - 이전 상태와 비교해 좋아졌는지 나빠졌는지
+    - 시행한 조치의 효과가 있었는지
+    - 현재 상태에서 추가 조치가 필요한지
+    - 앞으로 어떤 항목을 계속 관찰해야 하는지
+    - 다음 확인 시점은 언제가 적절한지
+    `
+        : `
+    알고 싶은 것:
+    - 사진과 관찰 내용에서 보이는 현재 상태
+    - 가능한 원인
+    - 지금 해야 할 조치
+    - 추가로 확인해야 할 부분
+    - 앞으로 관찰할 사항
+    `;
     const questionText =
     mode === "diagnose"
         ? `[${inquiryDate} · ${note.plant.plantName} · Diagnose]
@@ -106,18 +195,11 @@ ${note.photos
     .map((photo, index) => `${index + 1}. ${photo.caption || photo.fileName}`)
     .join("\n")}
 
-알고 싶은 것:
-- 사진과 관찰 내용에서 보이는 증상
-- 가능한 원인을 가능성이 높은 순서대로
-- 병충해, 물 부족, 과습, 영양 문제 가능성
-- 추가로 확인해야 할 부분
-- 지금 해야 할 조치
-- 피해야 할 조치
-- 긴급한 문제인지 여부
+${diagnoseRequest}
 
 확실하지 않은 내용은 추측이라고 표시해 주세요.
 
-${summaryInstruction}
+${diagnoseSummaryInstruction}
 `
         : `[${inquiryDate} · ${note.plant.plantName} · Identify]
         이 식물의 종류를 확인해 주세요.
@@ -151,7 +233,7 @@ ${note.photos
 - 추가로 확인해야 할 특징
 - 현재 보이는 전반적인 건강 상태
 
-${summaryInstruction}
+${identifySummaryInstruction}
 `;
 
     return (

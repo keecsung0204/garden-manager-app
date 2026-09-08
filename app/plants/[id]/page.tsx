@@ -570,7 +570,15 @@ export default async function PlantDetailPage({
                     </div>
                   )}
                   {note.photos.length > 0 && (
-                    <Link className="ai-check-link" href={`/notes/${note.id}/ai-check`}>
+                    <Link
+                      className="ai-check-link"
+                      href={`/notes/${note.id}/ai-check?mode=${
+                        note.noteTypeRef?.typeCode === "NT01" ||
+                        note.noteTypeRef?.typeCode === "NT12"
+                          ? "identify"
+                          : "diagnose"
+                      }`}
+                    >
                       AI 문의자료 보기
                     </Link>
                   )}

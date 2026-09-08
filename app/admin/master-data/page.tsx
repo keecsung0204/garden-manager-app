@@ -168,7 +168,7 @@ async function addNoteType(formData: FormData) {
   });
 
   revalidatePath("/admin/master-data");
-  return;
+  redirect("/admin/master-data#note-types");
 }
 
 async function updateNoteType(formData: FormData) {
