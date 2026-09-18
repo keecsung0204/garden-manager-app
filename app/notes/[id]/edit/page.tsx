@@ -49,6 +49,12 @@ export default async function EditNotePage({
         );
     }
 
+    const plants = await prisma.plant.findMany({
+    orderBy: {
+        plantCode: "asc",
+    },
+    });
+
     const plantId = note.plantId;
     const photoDisplayItems = await Promise.all(
         note.photos.map(async (photo) => ({
@@ -66,12 +72,14 @@ export default async function EditNotePage({
         const aiAnswerSummary = formData.get("aiAnswerSummary") as string;
         const photo = formData.get("photo") as File | null;
         const newPhotoCaption = formData.get("newPhotoCaption") as string;
+        const targetPlantId = Number(formData.get("plantId"));
 
         await prisma.plantNote.update({
             where: {
                 id: noteId,
             },
             data: {
+                plantId: targetPlantId,
                 noteTypeId: noteTypeId ? Number(noteTypeId) : null,
                 content,
                 aiQuestionSummary: aiQuestionSummary?.trim() || null,
@@ -91,6 +99,7 @@ export default async function EditNotePage({
                         id: photo.id,
                     },
                     data: {
+                        plantId: targetPlantId,
                         caption:
                             (formData.get(`photoCaption-${photo.id}`) as string)?.trim() ||
                             null,
@@ -101,12 +110,12 @@ export default async function EditNotePage({
         if (photo && photo.size > 0) {
             const uploadedPhoto = await uploadGardenPhoto({
                 file: photo,
-                plantId,
+                plantId: targetPlantId,
                 noteId,
             });
             await prisma.plantPhoto.create({
                 data: {
-                    plantId,
+                    plantId: targetPlantId,
                     noteId,
                     fileName: uploadedPhoto.fileName,
                     filePath: uploadedPhoto.filePath,
@@ -115,8 +124,8 @@ export default async function EditNotePage({
                 },
             });
         }
-        revalidatePath(`/plants/${plantId}`);
-        redirect(`/plants/${plantId}`);
+        revalidatePath(`/plants/${targetPlantId}`);
+        redirect(`/plants/${targetPlantId}`);
     }
 
     return (
@@ -133,6 +142,22 @@ export default async function EditNotePage({
                 <h2>{note.plant.plantName}</h2>
 
                 <form className="add-note-form" action={updateNote}>
+                    <div className="form-row">
+                        <label htmlFor="plantId">Plant</label>
+
+                        <select
+                            id="plantId"
+                            name="plantId"
+                            defaultValue={String(note.plantId)}
+                        >
+                            {plants.map((plant) => (
+                            <option key={plant.id} value={plant.id}>
+                                {plant.plantCode} - {plant.plantName}
+                            </option>
+                            ))}
+                        </select>
+                        </div>
+
                     <div className="form-row">
                         <label htmlFor="noteTypeId">Note Type</label>
 
